@@ -15,8 +15,6 @@ WORKDIR /app
 # Copy package files
 COPY package.json pnpm-workspace.yaml pnpm-lock.yaml ./
 COPY apps/web/package.json ./apps/web/
-COPY package.json pnpm-workspace.yaml ./
-COPY apps/web/package.json ./apps/web/
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/database/package.json ./packages/database/
 COPY packages/ui/package.json ./packages/ui/
@@ -62,11 +60,14 @@ COPY apps/web/next.config.ts ./
 COPY apps/web/next-env.d.ts ./
 COPY apps/web/tsconfig.json ./
 
+# Set DATABASE_URL for build (needed for Prisma static generation)
+ENV DATABASE_URL="postgresql://foundry:foundry@localhost:5432/foundry?schema=public"
+
 # Generate Prisma client
 RUN pnpm db:generate
 
-# Build the application
-RUN pnpm build
+# Build the application (skip linting for Docker builds)
+RUN pnpm --filter @foundry/web build --no-lint
 
 # =============================================================================
 # Stage 3: Runner
