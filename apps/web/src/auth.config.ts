@@ -1,8 +1,10 @@
 import type { NextAuthConfig } from "next-auth";
 
 import type { AppRole } from "@/auth/guards";
+import { resolveAuthSecret } from "@/auth/secret";
 
 const authConfig = {
+	secret: resolveAuthSecret(),
 	pages: {
 		signIn: "/login",
 	},
