@@ -20,7 +20,7 @@ export const tokenScopeSchema = z.enum([
 export type TokenScope = z.infer<typeof tokenScopeSchema>;
 
 export const fileFrontmatterSchema = z.object({
-  id: z.string().uuid(),
+  id: z.uuid(),
   title: z.string().min(1),
   slug: z.string().min(1),
   space: z.string().min(1),
@@ -48,7 +48,7 @@ export const createSpaceSchema = z.object({
 export type CreateSpaceInput = z.infer<typeof createSpaceSchema>;
 
 export const createPageSchema = z.object({
-  spaceId: z.string().uuid(),
+  spaceId: z.uuid(),
   title: z.string().min(1).max(160),
   slug: z.string().min(1).max(160),
   path: z.string().min(1).max(255),
@@ -57,7 +57,7 @@ export const createPageSchema = z.object({
   pinned: z.boolean().default(false),
   status: pageStatusSchema.default("draft"),
   source: pageSourceSchema.default("human"),
-  draftOfPageId: z.string().uuid().optional(),
+  draftOfPageId: z.uuid().optional(),
 });
 export type CreatePageInput = z.infer<typeof createPageSchema>;
 
@@ -84,19 +84,19 @@ export type SearchFilters = z.infer<typeof searchFiltersSchema>;
 export const createTokenSchema = z.object({
   name: z.string().min(1).max(80),
   scopes: z.array(tokenScopeSchema).min(1),
-  allowedSpaceIds: z.array(z.string().uuid()).default([]),
+  allowedSpaceIds: z.array(z.uuid()).default([]),
   allowedPathPrefixes: z.array(z.string()).default([]),
-  expiresAt: z.string().datetime().optional(),
+  expiresAt: z.iso.datetime().optional(),
 });
 export type CreateTokenInput = z.infer<typeof createTokenSchema>;
 
 export const promoteDraftSchema = z.object({
-  targetPageId: z.string().uuid().optional(),
+  targetPageId: z.uuid().optional(),
 });
 export type PromoteDraftInput = z.infer<typeof promoteDraftSchema>;
 
 export const revertPageSchema = z.object({
-  versionId: z.string().uuid(),
+  versionId: z.uuid(),
 });
 export type RevertPageInput = z.infer<typeof revertPageSchema>;
 
