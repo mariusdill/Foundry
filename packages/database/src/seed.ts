@@ -83,7 +83,7 @@ const SPACES = [
 // Seed Data - Pages
 // ============================================================================
 
-interface PageSeedData {
+type PageSeedData = {
 	title: string;
 	path: string;
 	status: PageStatus;
@@ -91,7 +91,7 @@ interface PageSeedData {
 	pinned: boolean;
 	tags: string[];
 	markdown: string;
-}
+};
 
 const PAGES_BY_SPACE: Record<string, PageSeedData[]> = {
 	"infra-runbooks": [
@@ -1230,9 +1230,11 @@ async function seedPages(
 	let totalPages = 0;
 
 	for (const space of spaces) {
-		const pagesData = PAGES_BY_SPACE[space.slug] || [];
+		const pagesData = PAGES_BY_SPACE[space.slug] ?? [];
 
-		console.log(`   📂 Space: ${space.slug} (${pagesData.length} pages)`);
+		console.log(
+			`   📂 Space: ${space.slug} (${String(pagesData.length)} pages)`,
+		);
 
 		for (const pageData of pagesData) {
 			const pageId = generateId();
@@ -1294,7 +1296,7 @@ async function seedPages(
 		}
 	}
 
-	console.log(`\n   Total pages created: ${totalPages}`);
+	console.log(`\n   Total pages created: ${String(totalPages)}`);
 	console.log("");
 }
 

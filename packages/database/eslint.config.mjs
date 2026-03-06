@@ -9,7 +9,7 @@ export default tseslint.config(
 	{
 		languageOptions: {
 			parserOptions: {
-				project: "./tsconfig.json",
+				project: "./tsconfig.eslint.json",
 				tsconfigRootDir: import.meta.dirname,
 			},
 		},
@@ -26,6 +26,12 @@ export default tseslint.config(
 		},
 	},
 	{
-		ignores: ["dist/**", "node_modules/**", "src/generated/**", "eslint.config.mjs", "prisma.config.ts"],
+		ignores: [
+			"dist/**",
+			"node_modules/**",
+			"src/generated/**",
+			"eslint.config.mjs",
+			"prisma.config.ts",
+		],
 	},
 );

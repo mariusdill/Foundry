@@ -291,7 +291,7 @@ describe("Dual-Storage Integration", () => {
 
 			// Verify sync
 			expect(dbPage?.title).toBe(frontmatter.title);
-			expect(markdown).toContain(dbPage?.contentText || "");
+			expect(markdown).toContain(dbPage?.contentText ?? "");
 		});
 	});
 });

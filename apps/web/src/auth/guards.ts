@@ -17,7 +17,11 @@ export function isAuthenticationExemptPathname(pathname: string) {
 }
 
 export function isProtectedApiPathname(pathname: string) {
-	return pathname.startsWith("/api/") && !pathname.startsWith("/api/auth");
+	return (
+		pathname.startsWith("/api/") &&
+		!pathname.startsWith("/api/auth") &&
+		pathname !== "/api/health"
+	);
 }
 
 export function isProtectedUiPathname(pathname: string) {

@@ -6,10 +6,8 @@ import { defineConfig } from "vitest/config";
 dotenv.config({ path: ".env.test" });
 
 // Set default DATABASE_URL if not provided
-if (!process.env.DATABASE_URL) {
-	process.env.DATABASE_URL =
-		"postgresql://foundry:foundry@localhost:5432/foundry?schema=public";
-}
+process.env.DATABASE_URL ??=
+	"postgresql://foundry:foundry@localhost:5432/foundry?schema=public";
 
 export default defineConfig({
 	test: {

@@ -40,7 +40,6 @@ COPY package.json pnpm-workspace.yaml ./
 COPY apps/web/package.json ./apps/web/
 COPY packages/shared/package.json ./packages/shared/
 COPY packages/database/package.json ./packages/database/
-COPY packages/database/prisma ./packages/database/prisma
 COPY packages/ui/package.json ./packages/ui/
 COPY packages/config/package.json ./packages/config/
 COPY packages/mcp-server/package.json ./packages/mcp-server/
@@ -69,45 +68,21 @@ RUN pnpm db:generate
 # Build the application (skip linting for Docker builds)
 RUN pnpm --filter @foundry/web build --no-lint
 
-# =============================================================================
-# Stage 3: Runner
-# =============================================================================
-FROM node:20-alpine AS runner
-
-WORKDIR /app
-
-# Create non-root user for security
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 foundry
 
-# Set environment variables
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-# Copy necessary files from builder
-COPY --from=builder /app/apps/web/.next/standalone ./
-COPY --from=builder /app/apps/web/.next/static ./
-COPY --from=builder /app/apps/web/public ./public
-COPY --from=builder /app/packages/database/prisma ./packages/database/prisma
-COPY --from=builder /app/node_modules/.prisma ./node_modules/.prisma
-COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
+RUN mkdir -p /app/data && chown foundry:nodejs /app/data
 
-# Copy package.json for scripts
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/apps/web/package.json ./apps/web/
-
-# Create data directory
-RUN mkdir -p /app/data && chown -R foundry:nodejs /app/data
-
-# Switch to non-root user
 USER foundry
 
-# Expose port
+WORKDIR /app/apps/web
+
 EXPOSE 3000
 
-# Healthcheck
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
     CMD node -e "require('http').get('http://localhost:3000/api/health', (r) => process.exit(r.statusCode === 200 ? 0 : 1))" || exit 1
 
-# Start the application
-CMD ["node", "apps/web/server.js"]
+CMD ["pnpm", "exec", "next", "start", "-H", "0.0.0.0", "-p", "3000"]
