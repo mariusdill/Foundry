@@ -13,9 +13,6 @@ import Link from "next/link";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { CreatePageDialog } from "./create-page-dialog";
-import { PageList } from "./page-list";
-import { PageTree } from "./page-tree";
 import {
 	Select,
 	SelectContent,
@@ -23,6 +20,9 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
+import { CreatePageDialog } from "./create-page-dialog";
+import { PageList } from "./page-list";
+import { PageTree } from "./page-tree";
 
 type PageWithUser = Page & { updatedBy: User | null };
 
@@ -38,6 +38,9 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 	const [sourceFilter, setSourceFilter] = useState<string>("all");
 	const [tagsFilter, setTagsFilter] = useState<string>("all");
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
+	const uniqueTags = Array.from(
+		new Set(initialPages.flatMap((page) => page.tags).filter(Boolean)),
+	).sort((left, right) => left.localeCompare(right));
 
 	// Filter pages
 	const filteredPages = initialPages.filter((page) => {
@@ -48,14 +51,9 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 			statusFilter === "all" || page.status === statusFilter;
 		const matchesSource =
 			sourceFilter === "all" || page.source === sourceFilter;
-		const matchesTags =
-			tagsFilter === "all" || page.tags?.includes(tagsFilter);
-		return matchesSearch && matchesStatus && matchesSource && matchesTags;
+		const matchesTag = tagsFilter === "all" || page.tags.includes(tagsFilter);
+		return matchesSearch && matchesStatus && matchesSource && matchesTag;
 	});
-	const uniqueTags = Array.from(
-		new Set(initialPages.flatMap((p) => p.tags || [])),
-	);
-
 	return (
 		<div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-background">
 			{/* Sidebar */}
@@ -158,14 +156,15 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 									</SelectTrigger>
 									<SelectContent>
 										<SelectItem value="all">All Tags</SelectItem>
-										{uniqueTags.map((tag) => (
-											<SelectItem key={tag} value={tag}>
-												{tag}
-											</SelectItem>
-										))}
+										{uniqueTags.map((tag) => {
+											return (
+												<SelectItem key={tag} value={tag}>
+													{tag}
+												</SelectItem>
+											);
+										})}
 									</SelectContent>
 								</Select>
-
 							</div>
 						</div>
 

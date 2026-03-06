@@ -1,4 +1,9 @@
 export * from "./client";
-export type { User, Page, Space } from "./generated/prisma/client";
-export { TokenScope, UserRole } from "./generated/prisma/client";
+export type { AuditEvent, Page, Space, User } from "./generated/prisma/client";
+export {
+	ActorType,
+	Prisma,
+	TokenScope,
+	UserRole,
+} from "./generated/prisma/client";
 export * from "./markdown";

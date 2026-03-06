@@ -2,6 +2,7 @@ import { rm } from "node:fs/promises";
 import { prisma, readMarkdownFile, writeMarkdownFile } from "@foundry/database";
 import { updatePageSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { logAuditEvent } from "@/lib/audit";
 import { requireAuth, requireRole, toAuthErrorResponse } from "@/lib/auth";
 import { createVersion } from "@/lib/versioning";
 
@@ -141,6 +142,22 @@ export async function PATCH(
 			);
 		}
 
+		await logAuditEvent({
+			actorId: user.id,
+			actorType: "human",
+			action: "page:update",
+			targetId: updatedPage.id,
+			targetType: "page",
+			pageId: updatedPage.id,
+			metadata: {
+				title: updatedPage.title,
+				status: updatedPage.status,
+				tags: updatedPage.tags,
+				pinned: updatedPage.pinned,
+				markdownUpdated: data.markdown !== undefined,
+			},
+		});
+
 		return NextResponse.json(updatedPage);
 	} catch (error) {
 		const authResponse = toAuthErrorResponse(error);
@@ -161,7 +178,7 @@ export async function DELETE(
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
-		await requireRole("editor");
+		const user = await requireRole("editor");
 
 		const { id } = await params;
 		const page = await prisma.page.findUnique({
@@ -183,6 +200,21 @@ export async function DELETE(
 		// Delete page in database
 		await prisma.page.delete({
 			where: { id },
+		});
+
+		await logAuditEvent({
+			actorId: user.id,
+			actorType: "human",
+			action: "page:delete",
+			targetId: page.id,
+			targetType: "page",
+			pageId: page.id,
+			metadata: {
+				spaceId: page.spaceId,
+				title: page.title,
+				path: page.path,
+				contentPath: page.contentPath,
+			},
 		});
 
 		return new NextResponse(null, { status: 204 });

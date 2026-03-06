@@ -2,6 +2,7 @@ import { rm } from "node:fs/promises";
 import { prisma } from "@foundry/database";
 import { createSpaceSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { logAuditEvent } from "@/lib/audit";
 import { requireAdmin, requireAuth, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET(
@@ -40,7 +41,7 @@ export async function PATCH(
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
-		await requireAdmin();
+		const user = await requireAdmin();
 
 		const { id } = await params;
 		const space = await prisma.space.findUnique({
@@ -91,6 +92,19 @@ export async function PATCH(
 			},
 		});
 
+		await logAuditEvent({
+			actorId: user.id,
+			actorType: "human",
+			action: "space:update",
+			targetId: updatedSpace.id,
+			targetType: "space",
+			metadata: {
+				name: updatedSpace.name,
+				slug: updatedSpace.slug,
+				icon: updatedSpace.icon,
+			},
+		});
+
 		return NextResponse.json(updatedSpace);
 	} catch (error) {
 		const authResponse = toAuthErrorResponse(error);
@@ -111,7 +125,7 @@ export async function DELETE(
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
-		await requireAdmin();
+		const user = await requireAdmin();
 
 		const { id } = await params;
 		const space = await prisma.space.findUnique({
@@ -134,6 +148,19 @@ export async function DELETE(
 		// Delete space in database
 		await prisma.space.delete({
 			where: { id },
+		});
+
+		await logAuditEvent({
+			actorId: user.id,
+			actorType: "human",
+			action: "space:delete",
+			targetId: space.id,
+			targetType: "space",
+			metadata: {
+				name: space.name,
+				slug: space.slug,
+				kind: space.kind,
+			},
 		});
 
 		return new NextResponse(null, { status: 204 });

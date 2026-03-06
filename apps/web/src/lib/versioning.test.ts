@@ -8,7 +8,7 @@ const versionFindFirstMock = vi.fn();
 const versionFindManyMock = vi.fn();
 const versionFindUniqueMock = vi.fn();
 const versionCreateMock = vi.fn();
-const auditEventCreateMock = vi.fn();
+const logAuditEventMock = vi.fn();
 const readMarkdownFileMock = vi.fn();
 const writeMarkdownFileMock = vi.fn();
 
@@ -25,12 +25,13 @@ vi.mock("@foundry/database", () => ({
 			findUnique: versionFindUniqueMock,
 			create: versionCreateMock,
 		},
-		auditEvent: {
-			create: auditEventCreateMock,
-		},
 	},
 	readMarkdownFile: readMarkdownFileMock,
 	writeMarkdownFile: writeMarkdownFileMock,
+}));
+
+vi.mock("./audit", () => ({
+	logAuditEvent: logAuditEventMock,
 }));
 
 describe("versioning helpers", () => {
@@ -46,12 +47,11 @@ describe("versioning helpers", () => {
 						findUnique: versionFindUniqueMock,
 						create: versionCreateMock,
 					},
-					auditEvent: { create: auditEventCreateMock },
 				}),
 		);
 	});
 
-	it("creates a version and audit event when content changes", async () => {
+	it("creates a version when content changes", async () => {
 		const { createVersion } = await import("./versioning");
 		versionFindFirstMock.mockResolvedValue({ hash: "older-hash" });
 		versionCreateMock.mockResolvedValue({ id: "version-1" });
@@ -67,14 +67,7 @@ describe("versioning helpers", () => {
 				createdById: "user-1",
 			},
 		});
-		expect(auditEventCreateMock).toHaveBeenCalledWith({
-			data: expect.objectContaining({
-				actorId: "user-1",
-				action: "page.version.created",
-				targetId: "version-1",
-				pageId: "page-1",
-			}),
-		});
+		expect(logAuditEventMock).not.toHaveBeenCalled();
 		expect(created).toEqual({ id: "version-1" });
 	});
 
@@ -89,7 +82,7 @@ describe("versioning helpers", () => {
 			createVersion("page-1", "same content", "user-1"),
 		).resolves.toBeNull();
 		expect(versionCreateMock).not.toHaveBeenCalled();
-		expect(auditEventCreateMock).not.toHaveBeenCalled();
+		expect(logAuditEventMock).not.toHaveBeenCalled();
 	});
 
 	it("lists versions newest first with creator details", async () => {
@@ -189,17 +182,17 @@ describe("versioning helpers", () => {
 			}),
 			targetContent,
 		);
-		expect(auditEventCreateMock).toHaveBeenCalledWith({
-			data: expect.objectContaining({
-				actorId: "user-1",
-				action: "page.reverted",
-				targetId: "page-1",
-				pageId: "page-1",
-				metadata: expect.objectContaining({
-					versionId: "version-target",
-					backupVersionId: "backup-version",
-				}),
-			}),
+		expect(logAuditEventMock).toHaveBeenCalledWith({
+			actorId: "user-1",
+			actorType: "human",
+			action: "page:revert",
+			targetId: "page-1",
+			targetType: "page",
+			pageId: "page-1",
+			metadata: {
+				versionId: "version-target",
+				backupVersionId: "backup-version",
+			},
 		});
 		expect(reverted.contentText).toBe(targetContent);
 	});

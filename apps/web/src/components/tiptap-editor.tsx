@@ -286,7 +286,7 @@ export function TiptapEditor({
 		},
 		onUpdate: ({ editor }) => {
 			// Export as markdown
-			const markdown = (editor.storage as { markdown: { getMarkdown: () => string } }).markdown.getMarkdown();
+			const markdown = (editor.storage as unknown as { markdown: { getMarkdown: () => string } }).markdown.getMarkdown();
 			onChange(markdown);
 		},
 	});

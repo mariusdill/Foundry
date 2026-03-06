@@ -1,6 +1,7 @@
 import { createHash } from "node:crypto";
 import { prisma, writeMarkdownFile } from "@foundry/database";
 import { NextResponse } from "next/server";
+import { logAuditEvent } from "./audit";
 
 type VersioningClient = {
 	version: {
@@ -12,9 +13,6 @@ type VersioningClient = {
 	page: {
 		findUnique: typeof prisma.page.findUnique;
 		update: typeof prisma.page.update;
-	};
-	auditEvent: {
-		create: typeof prisma.auditEvent.create;
 	};
 };
 
@@ -60,19 +58,6 @@ async function createVersionWithClient(
 			content,
 			hash,
 			createdById: userId,
-		},
-	});
-
-	await client.auditEvent.create({
-		data: {
-			actorId: userId,
-			actorType: "human",
-			action: "page.version.created",
-			targetId: version.id,
-			targetType: "version",
-			scope: "page",
-			pageId,
-			metadata: { hash },
 		},
 	});
 
@@ -148,22 +133,6 @@ export async function revertToVersion(
 				include: { space: true },
 			});
 
-			await tx.auditEvent.create({
-				data: {
-					actorId: userId,
-					actorType: "human",
-					action: "page.reverted",
-					targetId: pageId,
-					targetType: "page",
-					scope: "page",
-					pageId,
-					metadata: {
-						versionId,
-						backupVersionId: backupVersion?.id ?? null,
-					},
-				},
-			});
-
 			return {
 				restoredContent: targetVersion.content,
 				updatedPage,
@@ -190,6 +159,19 @@ export async function revertToVersion(
 		},
 		restoredContent,
 	);
+
+	await logAuditEvent({
+		actorId: userId,
+		actorType: "human",
+		action: "page:revert",
+		targetId: updatedPage.id,
+		targetType: "page",
+		pageId: updatedPage.id,
+		metadata: {
+			versionId,
+			backupVersionId,
+		},
+	});
 
 	return updatedPage;
 }

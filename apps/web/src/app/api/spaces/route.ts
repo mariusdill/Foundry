@@ -3,6 +3,7 @@ import { join } from "node:path";
 import { prisma } from "@foundry/database";
 import { createSpaceSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { logAuditEvent } from "@/lib/audit";
 import { requireAdmin, requireAuth, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET() {
@@ -29,7 +30,7 @@ export async function GET() {
 
 export async function POST(request: Request) {
 	try {
-		await requireAdmin();
+		const user = await requireAdmin();
 
 		const body = await request.json();
 		const result = createSpaceSchema.safeParse(body);
@@ -84,6 +85,19 @@ export async function POST(request: Request) {
 				kind: data.kind,
 				icon: data.icon,
 				rootFolder,
+			},
+		});
+
+		await logAuditEvent({
+			actorId: user.id,
+			actorType: "human",
+			action: "space:create",
+			targetId: space.id,
+			targetType: "space",
+			metadata: {
+				name: space.name,
+				slug: space.slug,
+				kind: space.kind,
 			},
 		});
 

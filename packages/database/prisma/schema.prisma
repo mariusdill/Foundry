@@ -200,6 +200,9 @@ model AuditEvent {
   createdAt      DateTime       @default(now())
 
   @@index([createdAt])
+  @@index([actorId])
+  @@index([targetId])
+  @@index([pageId])
 }
 
 model Attachment {

@@ -5,6 +5,7 @@ import {
 } from "@foundry/database";
 import { createPageSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { logAuditEvent } from "@/lib/audit";
 import { requireAuth, requireRole, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET(request: Request) {
@@ -13,6 +14,11 @@ export async function GET(request: Request) {
 
 		const { searchParams } = new URL(request.url);
 		const spaceId = searchParams.get("spaceId");
+		const status = searchParams.get("status");
+
+		const where: any = {};
+		if (spaceId) where.spaceId = spaceId;
+		if (status) where.status = status;
 
 		const where = spaceId ? { spaceId } : {};
 
@@ -39,7 +45,7 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
 	try {
-		await requireRole("editor");
+		const user = await requireRole("editor");
 
 		const body = await request.json();
 		const result = createPageSchema.safeParse(body);
@@ -136,6 +142,22 @@ export async function POST(request: Request) {
 				{ status: 500 },
 			);
 		}
+
+		await logAuditEvent({
+			actorId: user.id,
+			actorType: "human",
+			action: "page:create",
+			targetId: page.id,
+			targetType: "page",
+			pageId: page.id,
+			metadata: {
+				spaceId: page.spaceId,
+				title: page.title,
+				path: page.path,
+				status: page.status,
+				source: page.source,
+			},
+		});
 
 		return NextResponse.json(page, { status: 201 });
 	} catch (error) {
