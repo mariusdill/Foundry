@@ -116,9 +116,9 @@ export function DashboardPage() {
               <Button className="rounded-2xl px-5">Open search</Button>
             </div>
 
-            <div className="grid gap-3 rounded-[24px] border border-[color:var(--border-subtle)] bg-[linear-gradient(180deg,rgba(10,17,27,0.92),rgba(13,19,29,0.94))] p-4 sm:grid-cols-2">
+            <div className="grid gap-3 rounded-lg border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] p-4 sm:grid-cols-2">
               {searchHighlights.map((item) => (
-                <div key={item.title} className="rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(18,27,40,0.8)] p-4">
+                <div key={item.title} className="rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-1)] p-3">
                   <div className="flex items-center justify-between gap-3">
                     <p className="text-sm font-semibold text-[color:var(--text-primary)]">{item.title}</p>
                     <ArrowUpRight className="size-4 text-[color:var(--text-muted)]" />
@@ -139,7 +139,7 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {reviewQueue.map((item) => (
-              <div key={item.title} className="rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(18,27,40,0.76)] p-4">
+              <div key={item.title} className="rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] p-3">
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="text-sm font-semibold text-[color:var(--text-primary)]">{item.title}</p>
@@ -165,7 +165,7 @@ export function DashboardPage() {
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between gap-3">
                   <p className="text-sm text-[color:var(--text-secondary)]">{item.label}</p>
-                  <div className="flex size-10 items-center justify-center rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(18,27,40,0.82)]">
+                  <div className="flex size-8 items-center justify-center rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)]">
                     <Icon className="size-4" style={{ color: item.accent }} />
                   </div>
                 </div>
@@ -185,7 +185,7 @@ export function DashboardPage() {
           </CardHeader>
           <CardContent className="space-y-3">
             {activityFeed.map((item) => (
-              <div key={item.title} className="flex items-start justify-between gap-4 rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(18,27,40,0.7)] px-4 py-4">
+              <div key={item.title} className="flex items-start justify-between gap-4 rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] px-3 py-3">
                 <div>
                   <p className="text-sm font-medium text-[color:var(--text-primary)]">{item.title}</p>
                   <p className="mt-1 text-sm text-[color:var(--text-secondary)]">{item.detail}</p>
@@ -209,17 +209,17 @@ export function DashboardPage() {
               { label: "Prisma schema", value: "Users, spaces, pages, versions, audit events, tokens" },
               { label: "Markdown boundary", value: "Files on disk with frontmatter as content source of truth" },
             ].map((item) => (
-              <div key={item.label} className="rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(18,27,40,0.78)] p-4">
+              <div key={item.label} className="rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] p-3">
                 <p className="text-sm font-semibold text-[color:var(--text-primary)]">{item.label}</p>
                 <p className="mt-1 text-sm text-[color:var(--text-secondary)]">{item.value}</p>
               </div>
             ))}
             <div className="grid gap-3 sm:grid-cols-2">
-              <Button variant="secondary" className="rounded-2xl">
+              <Button variant="secondary" className="rounded-md">
                 <FolderKanban className="size-4" />
                 Browse spaces
               </Button>
-              <Button variant="ghost" className="rounded-2xl">
+              <Button variant="ghost" className="rounded-md">
                 <BrainCircuit className="size-4" />
                 Review drafts
               </Button>
@@ -254,7 +254,7 @@ export function DashboardPage() {
                 detail: "Tokens, MCP writes, and human edits all leave a visible attribution trail.",
               },
             ].map((item) => (
-              <div key={item.title} className="rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(18,27,40,0.78)] p-4">
+              <div key={item.title} className="rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] p-3">
                 <p className="text-sm font-semibold text-[color:var(--text-primary)]">{item.title}</p>
                 <p className="mt-2 text-sm leading-6 text-[color:var(--text-secondary)]">{item.detail}</p>
               </div>
@@ -275,9 +275,9 @@ export function DashboardPage() {
             ].map((item) => {
               const Icon = item.icon;
               return (
-                <div key={item.label} className="flex items-center justify-between rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(18,27,40,0.78)] px-4 py-3">
+                <div key={item.label} className="flex items-center justify-between rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] px-3 py-2">
                   <div className="flex items-center gap-3">
-                    <div className="flex size-10 items-center justify-center rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(10,15,24,0.86)]">
+                    <div className="flex size-8 items-center justify-center rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-1)]">
                       <Icon className="size-4 text-[color:var(--text-secondary)]" />
                     </div>
                     <span className="text-sm text-[color:var(--text-secondary)]">{item.label}</span>

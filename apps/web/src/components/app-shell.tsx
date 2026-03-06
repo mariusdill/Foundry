@@ -7,7 +7,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
-	CardDescription,
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
@@ -25,18 +24,15 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 
 	return (
 		<div className="min-h-screen px-4 py-4 sm:px-6 lg:px-8">
-			<div className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1600px] gap-4 lg:grid-cols-[290px_minmax(0,1fr)]">
-				<aside className="flex flex-col rounded-[28px] border border-[color:var(--border-subtle)] bg-[linear-gradient(180deg,rgba(13,19,29,0.88),rgba(7,10,17,0.9))] px-4 py-5 shadow-[0_24px_80px_rgba(3,7,15,0.45)] lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]">
-					<div className="flex items-center justify-between border-b border-[color:var(--border-subtle)] px-2 pb-5">
-						<Link href="/" className="flex items-center gap-3">
-							<div className="flex size-11 items-center justify-center rounded-2xl border border-[color:var(--border-strong)] bg-[linear-gradient(135deg,rgba(92,124,255,0.2),rgba(139,109,248,0.16))] shadow-[0_10px_30px_rgba(24,39,79,0.32)]">
-								<Bolt className="size-5 text-[color:var(--text-primary)]" />
+			<div className="mx-auto grid min-h-[calc(100vh-2rem)] max-w-[1600px] gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+				<aside className="flex flex-col rounded-xl border border-[color:var(--border-subtle)] bg-[color:var(--surface-1)] px-3 py-4 lg:sticky lg:top-4 lg:h-[calc(100vh-2rem)]">
+					<div className="flex items-center justify-between px-2 pb-4">
+						<Link href="/" className="flex items-center gap-2">
+							<div className="flex size-6 items-center justify-center rounded-md bg-[color:var(--text-primary)]">
+								<Bolt className="size-4 text-[color:var(--background)]" />
 							</div>
 							<div>
-								<p className="text-[11px] uppercase tracking-[0.32em] text-[color:var(--text-muted)]">
-									Knowledge Ops
-								</p>
-								<h1 className="text-xl font-semibold tracking-[-0.03em] text-[color:var(--text-primary)]">
+								<h1 className="text-sm font-medium tracking-tight text-[color:var(--text-primary)]">
 									Foundry
 								</h1>
 							</div>
@@ -44,14 +40,14 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 						<Badge variant="agent">Live</Badge>
 					</div>
 
-					<div className="mt-5 rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(10,16,26,0.66)] p-3">
-						<Link href="/search" className="flex items-center gap-3 rounded-xl border border-[color:var(--border-subtle)] bg-[color:rgba(15,23,34,0.88)] px-3 py-3 text-sm text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] hover:border-[color:var(--border-strong)] transition-colors">
-							<Command className="size-4" />
-							<span>Search knowledge, drafts, and audit history</span>
+					<div className="mt-4 px-2">
+						<Link href="/search" className="flex items-center gap-2 rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] px-2 py-1.5 text-xs text-[color:var(--text-secondary)] hover:text-[color:var(--text-primary)] hover:border-[color:var(--border-strong)] transition-colors">
+							<Command className="size-3.5" />
+							<span>Search...</span>
 						</Link>
 					</div>
 
-					<nav className="mt-5 flex flex-col gap-2">
+					<nav className="mt-4 flex flex-col gap-0.5 px-2">
 						{primaryNavigation.map((item) => {
 							const Icon = item.icon;
 
@@ -59,9 +55,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 								<Link
 									key={item.href}
 									href={item.href}
-									className="group flex items-center justify-between gap-3 rounded-2xl border border-transparent bg-transparent px-3 py-3 text-[color:var(--text-secondary)] transition-all duration-200 hover:border-[color:var(--border-subtle)] hover:bg-[color:rgba(18,27,40,0.72)] hover:text-[color:var(--text-primary)]"
+									className="group flex items-center justify-between gap-2 rounded-md px-2 py-1.5 text-[color:var(--text-secondary)] transition-all duration-200 hover:bg-[color:var(--surface-2)] hover:text-[color:var(--text-primary)]"
 								>
-									<span className="flex items-center gap-3">
+									<span className="flex items-center gap-2">
 										<Icon className="size-4" />
 										<span className="text-sm font-medium">{item.label}</span>
 									</span>
@@ -75,22 +71,22 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 						})}
 					</nav>
 
-					<div className="mt-6 space-y-4 border-t border-[color:var(--border-subtle)] pt-6">
+					<div className="mt-6 space-y-4 px-2">
 						{sidebarSpaceGroups.map((group) => (
 							<div key={group.title}>
-								<p className="px-2 text-[11px] uppercase tracking-[0.28em] text-[color:var(--text-muted)]">
+								<p className="px-2 text-xs font-medium text-[color:var(--text-muted)]">
 									{group.title}
 								</p>
-								<div className="mt-2 space-y-1.5">
+								<div className="mt-1 space-y-0.5">
 									{group.items.map((item) => (
 										<div
 											key={item.label}
-											className="rounded-2xl px-3 py-2 transition-colors hover:bg-[color:rgba(18,27,40,0.72)]"
+											className="flex items-center justify-between rounded-md px-2 py-1.5 transition-colors hover:bg-[color:var(--surface-2)]"
 										>
-											<p className="text-sm font-medium text-[color:var(--text-primary)]">
+											<p className="text-sm font-medium text-[color:var(--text-secondary)] group-hover:text-[color:var(--text-primary)]">
 												{item.label}
 											</p>
-											<p className="mt-1 text-xs text-[color:var(--text-muted)]">
+											<p className="text-xs text-[color:var(--text-muted)]">
 												{item.meta}
 											</p>
 										</div>
@@ -100,42 +96,35 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 						))}
 					</div>
 
-					<div className="mt-auto space-y-3 border-t border-[color:var(--border-subtle)] pt-5">
-						<Card className="bg-[linear-gradient(180deg,rgba(15,24,37,0.96),rgba(10,15,24,0.96))]">
-							<CardHeader className="pb-3">
+					<div className="mt-auto space-y-3 px-2">
+						<Card className="border-none bg-transparent shadow-none">
+							<CardHeader className="p-0 pb-2">
 								<div className="flex items-center justify-between">
-									<CardTitle className="text-sm">Workspace safety</CardTitle>
-									<ShieldCheck className="size-4 text-[color:var(--success)]" />
+									<CardTitle className="text-xs font-medium text-[color:var(--text-muted)]">Workspace safety</CardTitle>
+									<ShieldCheck className="size-3.5 text-[color:var(--success)]" />
 								</div>
-								<CardDescription>
-									Agents default to draft-only writes. Every mutation is
-									versioned and attributed.
-								</CardDescription>
 							</CardHeader>
-							<CardContent className="space-y-3">
+							<CardContent className="space-y-1 p-0">
 								{knowledgeNavigation.slice(0, 3).map((item) => (
 									<div
 										key={item.href}
-										className="rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(18,27,40,0.72)] px-3 py-2"
+										className="rounded-md px-2 py-1.5 hover:bg-[color:var(--surface-2)]"
 									>
-										<p className="text-sm font-medium text-[color:var(--text-primary)]">
+										<p className="text-sm font-medium text-[color:var(--text-secondary)]">
 											{item.label}
-										</p>
-										<p className="mt-1 text-xs text-[color:var(--text-muted)]">
-											{item.hint}
 										</p>
 									</div>
 								))}
 							</CardContent>
 						</Card>
 
-						<div className="flex items-center justify-between rounded-2xl border border-[color:var(--border-subtle)] bg-[color:rgba(9,15,24,0.76)] px-4 py-4">
+						<div className="flex items-center justify-between rounded-md border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] px-3 py-2">
 							<div>
-								<p className="text-sm font-semibold text-[color:var(--text-primary)]">
+								<p className="text-sm font-medium text-[color:var(--text-primary)]">
 									{displayName}
 								</p>
-								<p className="text-xs uppercase tracking-[0.24em] text-[color:var(--text-muted)]">
-									{displayRole} access
+								<p className="text-xs text-[color:var(--text-muted)]">
+									{displayRole}
 								</p>
 							</div>
 							<div className="flex items-center gap-2">
@@ -149,7 +138,7 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 									<Button
 										variant="ghost"
 										size="sm"
-										className="min-w-0 rounded-xl px-3"
+										className="h-7 min-w-0 rounded-md px-2 text-xs"
 									>
 										Sign out
 									</Button>
@@ -157,9 +146,9 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 								<Button
 									variant="secondary"
 									size="sm"
-									className="min-w-0 rounded-xl px-3"
+									className="h-7 min-w-0 rounded-md px-2 text-xs"
 								>
-									<Plus className="size-4" />
+									<Plus className="size-3.5" />
 									New
 								</Button>
 							</div>
@@ -167,15 +156,15 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 					</div>
 				</aside>
 
-				<div className="min-h-[calc(100vh-2rem)] rounded-[32px] border border-[color:var(--border-subtle)] bg-[linear-gradient(180deg,rgba(13,19,29,0.88),rgba(7,10,17,0.9))] p-4 shadow-[0_24px_80px_rgba(3,7,15,0.45)] sm:p-5 lg:p-6">
-					<header className="rounded-[26px] border border-[color:var(--border-subtle)] bg-[color:rgba(10,15,24,0.82)] px-4 py-4 shadow-[0_12px_30px_rgba(5,8,14,0.24)] sm:px-5">
+				<div className="min-h-[calc(100vh-2rem)] rounded-xl border border-[color:var(--border-subtle)] bg-[color:var(--surface-1)] p-4 sm:p-5 lg:p-6">
+					<header className="rounded-lg border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] px-4 py-4 sm:px-5">
 						<div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
 							<div>
-								<p className="text-[11px] uppercase tracking-[0.28em] text-[color:var(--text-muted)]">
+								<p className="text-xs font-medium text-[color:var(--text-muted)]">
 									Workspace / dashboard / today
 								</p>
-								<div className="mt-2 flex flex-wrap items-center gap-3">
-									<h2 className="text-2xl font-semibold tracking-[-0.04em] text-[color:var(--text-primary)] sm:text-[2rem]">
+								<div className="mt-1 flex flex-wrap items-center gap-3">
+									<h2 className="text-xl font-medium tracking-tight text-[color:var(--text-primary)] sm:text-2xl">
 										Operational knowledge with human review built in.
 									</h2>
 									<Badge variant="stable">Stable system</Badge>

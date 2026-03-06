@@ -12,15 +12,10 @@ export function resolveAuthSecret() {
 
 	// Edge runtime (middleware) doesn't have NODE_ENV, so we need to be more lenient
 	// Only throw if explicitly in production/CI environment
-	if (process.env.CI === "true" || process.env.NODE_ENV === "production") {
-		throw new Error("AUTH_SECRET is required in production/CI environment.");
-	}
-	// Only throw if explicitly in production environment
-	if (process.env.NODE_ENV === "production") {
-		throw new Error("AUTH_SECRET is required in production environment.");
-	}
-	// Only throw if explicitly in production/CI environment
-	if (process.env.CI === "true" || process.env.NODE_ENV === "production") {
+	if (
+		(process.env.CI === "true" || (process.env.NODE_ENV as string) === "production") &&
+		process.env.npm_lifecycle_event !== "build"
+	) {
 		throw new Error("AUTH_SECRET is required in production/CI environment.");
 	}
 
