@@ -16,7 +16,7 @@ export async function GET(request: Request) {
 		const spaceId = searchParams.get("spaceId");
 		const status = searchParams.get("status");
 
-		const where: any = {};
+		const where: Record<string, string> = {};
 		if (spaceId) where.spaceId = spaceId;
 		if (status) where.status = status;
 
