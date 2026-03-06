@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
+
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -129,7 +129,7 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 				<div className="flex gap-2">
 					<Select
 						value={sourceFilter}
-						onValueChange={(v: any) => setSourceFilter(v)}
+						onValueChange={(v: "all" | "human" | "agent") => setSourceFilter(v)}
 					>
 						<SelectTrigger className="w-[140px]">
 							<SelectValue placeholder="Source" />

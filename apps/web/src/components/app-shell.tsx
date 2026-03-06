@@ -183,9 +183,11 @@ export async function AppShell({ children }: { children: React.ReactNode }) {
 							</div>
 
 							<div className="flex flex-wrap items-center gap-2">
-								<Button variant="ghost" size="sm">
-									<Sparkles className="size-4" />
-									Draft review
+								<Button variant="ghost" size="sm" asChild>
+									<Link href="/drafts">
+										<Sparkles className="size-4" />
+										Draft review
+									</Link>
 								</Button>
 								<Button size="sm">
 									<Plus className="size-4" />
