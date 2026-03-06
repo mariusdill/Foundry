@@ -5,6 +5,8 @@ import { NextResponse } from "next/server";
 import { requireAuth, requireRole, toAuthErrorResponse } from "@/lib/auth";
 import { createVersion } from "@/lib/versioning";
 
+export const dynamic = "force-dynamic";
+
 export async function GET(
 	request: Request,
 	{ params }: { params: Promise<{ id: string }> },

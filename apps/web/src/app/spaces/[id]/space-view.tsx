@@ -36,6 +36,7 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 	const [searchQuery, setSearchQuery] = useState("");
 	const [statusFilter, setStatusFilter] = useState<string>("all");
 	const [sourceFilter, setSourceFilter] = useState<string>("all");
+	const [tagsFilter, setTagsFilter] = useState<string>("all");
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
 	// Filter pages
@@ -47,8 +48,13 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 			statusFilter === "all" || page.status === statusFilter;
 		const matchesSource =
 			sourceFilter === "all" || page.source === sourceFilter;
-		return matchesSearch && matchesStatus && matchesSource;
+		const matchesTags =
+			tagsFilter === "all" || page.tags?.includes(tagsFilter);
+		return matchesSearch && matchesStatus && matchesSource && matchesTags;
 	});
+	const uniqueTags = Array.from(
+		new Set(initialPages.flatMap((p) => p.tags || [])),
+	);
 
 	return (
 		<div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-background">
@@ -145,6 +151,21 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 										<SelectItem value="agent">Agent</SelectItem>
 									</SelectContent>
 								</Select>
+
+								<Select value={tagsFilter} onValueChange={setTagsFilter}>
+									<SelectTrigger className="w-[130px]">
+										<SelectValue placeholder="Tags" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="all">All Tags</SelectItem>
+										{uniqueTags.map((tag) => (
+											<SelectItem key={tag} value={tag}>
+												{tag}
+											</SelectItem>
+										))}
+									</SelectContent>
+								</Select>
+
 							</div>
 						</div>
 
