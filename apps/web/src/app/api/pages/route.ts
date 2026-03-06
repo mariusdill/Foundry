@@ -20,7 +20,7 @@ export async function GET(request: Request) {
 		if (spaceId) where.spaceId = spaceId;
 		if (status) where.status = status;
 
-		const where = spaceId ? { spaceId } : {};
+
 
 		const pages = await prisma.page.findMany({
 			where,
