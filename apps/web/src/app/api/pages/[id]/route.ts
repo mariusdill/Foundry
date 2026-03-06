@@ -2,12 +2,16 @@ import { rm } from "node:fs/promises";
 import { prisma, readMarkdownFile, writeMarkdownFile } from "@foundry/database";
 import { updatePageSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { requireAuth, requireRole, toAuthErrorResponse } from "@/lib/auth";
+import { createVersion } from "@/lib/versioning";
 
 export async function GET(
 	request: Request,
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
+		await requireAuth();
+
 		const { id } = await params;
 		const page = await prisma.page.findUnique({
 			where: { id },
@@ -36,6 +40,11 @@ export async function GET(
 			});
 		}
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to fetch page:", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch page" },
@@ -49,6 +58,8 @@ export async function PATCH(
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
+		const user = await requireRole("editor");
+
 		const { id } = await params;
 		const page = await prisma.page.findUnique({
 			where: { id },
@@ -70,6 +81,18 @@ export async function PATCH(
 		}
 
 		const data = result.data;
+		let currentMarkdown = page.contentText;
+
+		try {
+			const fileContent = await readMarkdownFile(page.contentPath);
+			currentMarkdown = fileContent.markdown;
+		} catch (error) {
+			console.error("Failed to read existing markdown file:", error);
+		}
+
+		if (data.markdown !== undefined && data.markdown !== currentMarkdown) {
+			await createVersion(page.id, currentMarkdown, user.id);
+		}
 
 		// Update page in database
 		const updatedPage = await prisma.page.update({
@@ -80,20 +103,12 @@ export async function PATCH(
 				tags: data.tags !== undefined ? data.tags : undefined,
 				pinned: data.pinned !== undefined ? data.pinned : undefined,
 				contentText: data.markdown !== undefined ? data.markdown : undefined,
+				updatedById: user.id,
 			},
 			include: { space: true },
 		});
 
-		// Read existing markdown to get current content if not provided in update
-		let currentMarkdown = updatedPage.contentText;
-		if (data.markdown === undefined) {
-			try {
-				const fileContent = await readMarkdownFile(updatedPage.contentPath);
-				currentMarkdown = fileContent.markdown;
-			} catch (error) {
-				console.error("Failed to read existing markdown file:", error);
-			}
-		}
+		const nextMarkdown = data.markdown ?? currentMarkdown;
 
 		// Write updated markdown file
 		const frontmatter = {
@@ -102,11 +117,11 @@ export async function PATCH(
 			slug: updatedPage.slug,
 			space: updatedPage.space.slug,
 			path: updatedPage.path,
-			status: updatedPage.status as any,
+			status: updatedPage.status,
 			tags: updatedPage.tags,
 			updatedBy: updatedPage.updatedById || "system",
 			updatedAt: updatedPage.updatedAt.toISOString(),
-			source: updatedPage.source as any,
+			source: updatedPage.source,
 			pinned: updatedPage.pinned,
 		};
 
@@ -114,7 +129,7 @@ export async function PATCH(
 			await writeMarkdownFile(
 				updatedPage.contentPath,
 				frontmatter,
-				currentMarkdown,
+				nextMarkdown,
 			);
 		} catch (error) {
 			console.error("Failed to write markdown file:", error);
@@ -126,6 +141,11 @@ export async function PATCH(
 
 		return NextResponse.json(updatedPage);
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to update page:", error);
 		return NextResponse.json(
 			{ error: "Failed to update page" },
@@ -139,6 +159,8 @@ export async function DELETE(
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
+		await requireRole("editor");
+
 		const { id } = await params;
 		const page = await prisma.page.findUnique({
 			where: { id },
@@ -163,6 +185,11 @@ export async function DELETE(
 
 		return new NextResponse(null, { status: 204 });
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to delete page:", error);
 		return NextResponse.json(
 			{ error: "Failed to delete page" },

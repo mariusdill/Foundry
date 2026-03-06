@@ -3,27 +3,41 @@
   "compilerOptions": {
     "allowJs": true,
     "noEmit": true,
-    "jsx": "react-jsx",
-    "types": ["node"],
+    "jsx": "preserve",
+    "types": [
+      "node"
+    ],
     "plugins": [
       {
         "name": "next"
       }
     ],
     "paths": {
-      "@/*": ["./src/*"],
-      "@foundry/shared": ["../../packages/shared/src/index.ts"],
-      "@foundry/ui": ["../../packages/ui/src/index.ts"],
-      "@foundry/database": ["../../packages/database/src/index.ts"]
+      "@/*": [
+        "./src/*"
+      ],
+      "@foundry/shared": [
+        "../../packages/shared/src/index.ts"
+      ],
+      "@foundry/ui": [
+        "../../packages/ui/src/index.ts"
+      ],
+      "@foundry/database": [
+        "../../packages/database/src/index.ts"
+      ],
+      "@foundry/database/*": [
+        "../../packages/database/src/*"
+      ]
     }
   },
   "include": [
-    "next-env.d.ts",
+    "**/*.mts",
     "**/*.ts",
     "**/*.tsx",
-    ".next/types/**/*.ts",
-    ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "next-env.d.ts",
+    ".next/types/**/*.ts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules"
+  ]
 }

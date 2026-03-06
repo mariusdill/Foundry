@@ -1,9 +1,12 @@
 import { prisma } from "@foundry/database";
 import { searchFiltersSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { requireAuth, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET(request: Request) {
 	try {
+		await requireAuth();
+
 		const { searchParams } = new URL(request.url);
 		const params = Object.fromEntries(searchParams.entries());
 
@@ -17,6 +20,7 @@ export async function GET(request: Request) {
 
 		const { q, space, status, source, tag, pinned, sort } = result.data;
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const where: any = {};
 
 		if (q) {
@@ -80,6 +84,11 @@ export async function GET(request: Request) {
 
 		return NextResponse.json(results);
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to search pages:", error);
 		return NextResponse.json(
 			{ error: "Failed to search pages" },

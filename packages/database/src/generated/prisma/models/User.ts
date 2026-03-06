@@ -30,6 +30,8 @@ export type UserMinAggregateOutputType = {
   name: string | null
   passwordHash: string | null
   role: $Enums.UserRole | null
+  emailVerified: Date | null
+  image: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -40,6 +42,8 @@ export type UserMaxAggregateOutputType = {
   name: string | null
   passwordHash: string | null
   role: $Enums.UserRole | null
+  emailVerified: Date | null
+  image: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -50,6 +54,8 @@ export type UserCountAggregateOutputType = {
   name: number
   passwordHash: number
   role: number
+  emailVerified: number
+  image: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -62,6 +68,8 @@ export type UserMinAggregateInputType = {
   name?: true
   passwordHash?: true
   role?: true
+  emailVerified?: true
+  image?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -72,6 +80,8 @@ export type UserMaxAggregateInputType = {
   name?: true
   passwordHash?: true
   role?: true
+  emailVerified?: true
+  image?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -82,6 +92,8 @@ export type UserCountAggregateInputType = {
   name?: true
   passwordHash?: true
   role?: true
+  emailVerified?: true
+  image?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -165,6 +177,8 @@ export type UserGroupByOutputType = {
   name: string | null
   passwordHash: string | null
   role: $Enums.UserRole
+  emailVerified: Date | null
+  image: string | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -196,8 +210,13 @@ export type UserWhereInput = {
   name?: Prisma.StringNullableFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  image?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  accounts?: Prisma.AccountListRelationFilter
+  sessions?: Prisma.SessionListRelationFilter
+  authenticators?: Prisma.AuthenticatorListRelationFilter
   memberships?: Prisma.SpaceMemberListRelationFilter
   tokens?: Prisma.ApiTokenListRelationFilter
   pagesUpdated?: Prisma.PageListRelationFilter
@@ -211,8 +230,13 @@ export type UserOrderByWithRelationInput = {
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrderInput | Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  accounts?: Prisma.AccountOrderByRelationAggregateInput
+  sessions?: Prisma.SessionOrderByRelationAggregateInput
+  authenticators?: Prisma.AuthenticatorOrderByRelationAggregateInput
   memberships?: Prisma.SpaceMemberOrderByRelationAggregateInput
   tokens?: Prisma.ApiTokenOrderByRelationAggregateInput
   pagesUpdated?: Prisma.PageOrderByRelationAggregateInput
@@ -229,8 +253,13 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringNullableFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleFilter<"User"> | $Enums.UserRole
+  emailVerified?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
+  image?: Prisma.StringNullableFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  accounts?: Prisma.AccountListRelationFilter
+  sessions?: Prisma.SessionListRelationFilter
+  authenticators?: Prisma.AuthenticatorListRelationFilter
   memberships?: Prisma.SpaceMemberListRelationFilter
   tokens?: Prisma.ApiTokenListRelationFilter
   pagesUpdated?: Prisma.PageListRelationFilter
@@ -244,6 +273,8 @@ export type UserOrderByWithAggregationInput = {
   name?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
   role?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrderInput | Prisma.SortOrder
+  image?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -260,6 +291,8 @@ export type UserScalarWhereWithAggregatesInput = {
   name?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   role?: Prisma.EnumUserRoleWithAggregatesFilter<"User"> | $Enums.UserRole
+  emailVerified?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
+  image?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -270,8 +303,13 @@ export type UserCreateInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageCreateNestedManyWithoutUpdatedByInput
@@ -285,8 +323,13 @@ export type UserUncheckedCreateInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberUncheckedCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenUncheckedCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageUncheckedCreateNestedManyWithoutUpdatedByInput
@@ -300,8 +343,13 @@ export type UserUpdateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUpdateManyWithoutUpdatedByNestedInput
@@ -315,8 +363,13 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUncheckedUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUncheckedUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUncheckedUpdateManyWithoutUpdatedByNestedInput
@@ -330,6 +383,8 @@ export type UserCreateManyInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -340,6 +395,8 @@ export type UserUpdateManyMutationInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -350,6 +407,8 @@ export type UserUncheckedUpdateManyInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -360,6 +419,8 @@ export type UserCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -370,6 +431,8 @@ export type UserMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -380,6 +443,8 @@ export type UserMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
   role?: Prisma.SortOrder
+  emailVerified?: Prisma.SortOrder
+  image?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -406,8 +471,54 @@ export type EnumUserRoleFieldUpdateOperationsInput = {
   set?: $Enums.UserRole
 }
 
+export type NullableDateTimeFieldUpdateOperationsInput = {
+  set?: Date | string | null
+}
+
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
+}
+
+export type UserCreateNestedOneWithoutAccountsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAccountsInput, Prisma.UserUncheckedCreateWithoutAccountsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAccountsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAccountsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAccountsInput, Prisma.UserUncheckedCreateWithoutAccountsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAccountsInput
+  upsert?: Prisma.UserUpsertWithoutAccountsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAccountsInput, Prisma.UserUpdateWithoutAccountsInput>, Prisma.UserUncheckedUpdateWithoutAccountsInput>
+}
+
+export type UserCreateNestedOneWithoutSessionsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutSessionsInput
+  upsert?: Prisma.UserUpsertWithoutSessionsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutSessionsInput, Prisma.UserUpdateWithoutSessionsInput>, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+}
+
+export type UserCreateNestedOneWithoutAuthenticatorsInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuthenticatorsInput, Prisma.UserUncheckedCreateWithoutAuthenticatorsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuthenticatorsInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutAuthenticatorsNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutAuthenticatorsInput, Prisma.UserUncheckedCreateWithoutAuthenticatorsInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutAuthenticatorsInput
+  upsert?: Prisma.UserUpsertWithoutAuthenticatorsInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutAuthenticatorsInput, Prisma.UserUpdateWithoutAuthenticatorsInput>, Prisma.UserUncheckedUpdateWithoutAuthenticatorsInput>
 }
 
 export type UserCreateNestedOneWithoutMembershipsInput = {
@@ -486,14 +597,295 @@ export type UserUpdateOneRequiredWithoutTokensNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutTokensInput, Prisma.UserUpdateWithoutTokensInput>, Prisma.UserUncheckedUpdateWithoutTokensInput>
 }
 
+export type UserCreateWithoutAccountsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorCreateNestedManyWithoutUserInput
+  memberships?: Prisma.SpaceMemberCreateNestedManyWithoutUserInput
+  tokens?: Prisma.ApiTokenCreateNestedManyWithoutUserInput
+  pagesUpdated?: Prisma.PageCreateNestedManyWithoutUpdatedByInput
+  versions?: Prisma.VersionCreateNestedManyWithoutCreatedByInput
+  auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutAccountsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.SpaceMemberUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.ApiTokenUncheckedCreateNestedManyWithoutUserInput
+  pagesUpdated?: Prisma.PageUncheckedCreateNestedManyWithoutUpdatedByInput
+  versions?: Prisma.VersionUncheckedCreateNestedManyWithoutCreatedByInput
+  auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutAccountsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAccountsInput, Prisma.UserUncheckedCreateWithoutAccountsInput>
+}
+
+export type UserUpsertWithoutAccountsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAccountsInput, Prisma.UserUncheckedUpdateWithoutAccountsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAccountsInput, Prisma.UserUncheckedCreateWithoutAccountsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAccountsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAccountsInput, Prisma.UserUncheckedUpdateWithoutAccountsInput>
+}
+
+export type UserUpdateWithoutAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.SpaceMemberUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.ApiTokenUpdateManyWithoutUserNestedInput
+  pagesUpdated?: Prisma.PageUpdateManyWithoutUpdatedByNestedInput
+  versions?: Prisma.VersionUpdateManyWithoutCreatedByNestedInput
+  auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAccountsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.SpaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.ApiTokenUncheckedUpdateManyWithoutUserNestedInput
+  pagesUpdated?: Prisma.PageUncheckedUpdateManyWithoutUpdatedByNestedInput
+  versions?: Prisma.VersionUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+}
+
+export type UserCreateWithoutSessionsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorCreateNestedManyWithoutUserInput
+  memberships?: Prisma.SpaceMemberCreateNestedManyWithoutUserInput
+  tokens?: Prisma.ApiTokenCreateNestedManyWithoutUserInput
+  pagesUpdated?: Prisma.PageCreateNestedManyWithoutUpdatedByInput
+  versions?: Prisma.VersionCreateNestedManyWithoutCreatedByInput
+  auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutSessionsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.SpaceMemberUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.ApiTokenUncheckedCreateNestedManyWithoutUserInput
+  pagesUpdated?: Prisma.PageUncheckedCreateNestedManyWithoutUpdatedByInput
+  versions?: Prisma.VersionUncheckedCreateNestedManyWithoutCreatedByInput
+  auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutSessionsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+}
+
+export type UserUpsertWithoutSessionsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutSessionsInput, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutSessionsInput, Prisma.UserUncheckedCreateWithoutSessionsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutSessionsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutSessionsInput, Prisma.UserUncheckedUpdateWithoutSessionsInput>
+}
+
+export type UserUpdateWithoutSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.SpaceMemberUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.ApiTokenUpdateManyWithoutUserNestedInput
+  pagesUpdated?: Prisma.PageUpdateManyWithoutUpdatedByNestedInput
+  versions?: Prisma.VersionUpdateManyWithoutCreatedByNestedInput
+  auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutSessionsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.SpaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.ApiTokenUncheckedUpdateManyWithoutUserNestedInput
+  pagesUpdated?: Prisma.PageUncheckedUpdateManyWithoutUpdatedByNestedInput
+  versions?: Prisma.VersionUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+}
+
+export type UserCreateWithoutAuthenticatorsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  memberships?: Prisma.SpaceMemberCreateNestedManyWithoutUserInput
+  tokens?: Prisma.ApiTokenCreateNestedManyWithoutUserInput
+  pagesUpdated?: Prisma.PageCreateNestedManyWithoutUpdatedByInput
+  versions?: Prisma.VersionCreateNestedManyWithoutCreatedByInput
+  auditEvents?: Prisma.AuditEventCreateNestedManyWithoutActorInput
+}
+
+export type UserUncheckedCreateWithoutAuthenticatorsInput = {
+  id?: string
+  email: string
+  name?: string | null
+  passwordHash?: string | null
+  role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.SpaceMemberUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.ApiTokenUncheckedCreateNestedManyWithoutUserInput
+  pagesUpdated?: Prisma.PageUncheckedCreateNestedManyWithoutUpdatedByInput
+  versions?: Prisma.VersionUncheckedCreateNestedManyWithoutCreatedByInput
+  auditEvents?: Prisma.AuditEventUncheckedCreateNestedManyWithoutActorInput
+}
+
+export type UserCreateOrConnectWithoutAuthenticatorsInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuthenticatorsInput, Prisma.UserUncheckedCreateWithoutAuthenticatorsInput>
+}
+
+export type UserUpsertWithoutAuthenticatorsInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutAuthenticatorsInput, Prisma.UserUncheckedUpdateWithoutAuthenticatorsInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutAuthenticatorsInput, Prisma.UserUncheckedCreateWithoutAuthenticatorsInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutAuthenticatorsInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutAuthenticatorsInput, Prisma.UserUncheckedUpdateWithoutAuthenticatorsInput>
+}
+
+export type UserUpdateWithoutAuthenticatorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.SpaceMemberUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.ApiTokenUpdateManyWithoutUserNestedInput
+  pagesUpdated?: Prisma.PageUpdateManyWithoutUpdatedByNestedInput
+  versions?: Prisma.VersionUpdateManyWithoutCreatedByNestedInput
+  auditEvents?: Prisma.AuditEventUpdateManyWithoutActorNestedInput
+}
+
+export type UserUncheckedUpdateWithoutAuthenticatorsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.SpaceMemberUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.ApiTokenUncheckedUpdateManyWithoutUserNestedInput
+  pagesUpdated?: Prisma.PageUncheckedUpdateManyWithoutUpdatedByNestedInput
+  versions?: Prisma.VersionUncheckedUpdateManyWithoutCreatedByNestedInput
+  auditEvents?: Prisma.AuditEventUncheckedUpdateManyWithoutActorNestedInput
+}
+
 export type UserCreateWithoutMembershipsInput = {
   id?: string
   email: string
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageCreateNestedManyWithoutUpdatedByInput
   versions?: Prisma.VersionCreateNestedManyWithoutCreatedByInput
@@ -506,8 +898,13 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorUncheckedCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenUncheckedCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageUncheckedCreateNestedManyWithoutUpdatedByInput
   versions?: Prisma.VersionUncheckedCreateNestedManyWithoutCreatedByInput
@@ -536,8 +933,13 @@ export type UserUpdateWithoutMembershipsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUpdateManyWithoutUpdatedByNestedInput
   versions?: Prisma.VersionUpdateManyWithoutCreatedByNestedInput
@@ -550,8 +952,13 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUncheckedUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUncheckedUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUncheckedUpdateManyWithoutUpdatedByNestedInput
   versions?: Prisma.VersionUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -564,8 +971,13 @@ export type UserCreateWithoutPagesUpdatedInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenCreateNestedManyWithoutUserInput
   versions?: Prisma.VersionCreateNestedManyWithoutCreatedByInput
@@ -578,8 +990,13 @@ export type UserUncheckedCreateWithoutPagesUpdatedInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberUncheckedCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenUncheckedCreateNestedManyWithoutUserInput
   versions?: Prisma.VersionUncheckedCreateNestedManyWithoutCreatedByInput
@@ -608,8 +1025,13 @@ export type UserUpdateWithoutPagesUpdatedInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUpdateManyWithoutUserNestedInput
   versions?: Prisma.VersionUpdateManyWithoutCreatedByNestedInput
@@ -622,8 +1044,13 @@ export type UserUncheckedUpdateWithoutPagesUpdatedInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUncheckedUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUncheckedUpdateManyWithoutUserNestedInput
   versions?: Prisma.VersionUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -636,8 +1063,13 @@ export type UserCreateWithoutVersionsInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageCreateNestedManyWithoutUpdatedByInput
@@ -650,8 +1082,13 @@ export type UserUncheckedCreateWithoutVersionsInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberUncheckedCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenUncheckedCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageUncheckedCreateNestedManyWithoutUpdatedByInput
@@ -680,8 +1117,13 @@ export type UserUpdateWithoutVersionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUpdateManyWithoutUpdatedByNestedInput
@@ -694,8 +1136,13 @@ export type UserUncheckedUpdateWithoutVersionsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUncheckedUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUncheckedUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUncheckedUpdateManyWithoutUpdatedByNestedInput
@@ -708,8 +1155,13 @@ export type UserCreateWithoutAuditEventsInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageCreateNestedManyWithoutUpdatedByInput
@@ -722,8 +1174,13 @@ export type UserUncheckedCreateWithoutAuditEventsInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberUncheckedCreateNestedManyWithoutUserInput
   tokens?: Prisma.ApiTokenUncheckedCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageUncheckedCreateNestedManyWithoutUpdatedByInput
@@ -752,8 +1209,13 @@ export type UserUpdateWithoutAuditEventsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUpdateManyWithoutUpdatedByNestedInput
@@ -766,8 +1228,13 @@ export type UserUncheckedUpdateWithoutAuditEventsInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUncheckedUpdateManyWithoutUserNestedInput
   tokens?: Prisma.ApiTokenUncheckedUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUncheckedUpdateManyWithoutUpdatedByNestedInput
@@ -780,8 +1247,13 @@ export type UserCreateWithoutTokensInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageCreateNestedManyWithoutUpdatedByInput
   versions?: Prisma.VersionCreateNestedManyWithoutCreatedByInput
@@ -794,8 +1266,13 @@ export type UserUncheckedCreateWithoutTokensInput = {
   name?: string | null
   passwordHash?: string | null
   role?: $Enums.UserRole
+  emailVerified?: Date | string | null
+  image?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  accounts?: Prisma.AccountUncheckedCreateNestedManyWithoutUserInput
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  authenticators?: Prisma.AuthenticatorUncheckedCreateNestedManyWithoutUserInput
   memberships?: Prisma.SpaceMemberUncheckedCreateNestedManyWithoutUserInput
   pagesUpdated?: Prisma.PageUncheckedCreateNestedManyWithoutUpdatedByInput
   versions?: Prisma.VersionUncheckedCreateNestedManyWithoutCreatedByInput
@@ -824,8 +1301,13 @@ export type UserUpdateWithoutTokensInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUpdateManyWithoutUpdatedByNestedInput
   versions?: Prisma.VersionUpdateManyWithoutCreatedByNestedInput
@@ -838,8 +1320,13 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   name?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   role?: Prisma.EnumUserRoleFieldUpdateOperationsInput | $Enums.UserRole
+  emailVerified?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  image?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  accounts?: Prisma.AccountUncheckedUpdateManyWithoutUserNestedInput
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  authenticators?: Prisma.AuthenticatorUncheckedUpdateManyWithoutUserNestedInput
   memberships?: Prisma.SpaceMemberUncheckedUpdateManyWithoutUserNestedInput
   pagesUpdated?: Prisma.PageUncheckedUpdateManyWithoutUpdatedByNestedInput
   versions?: Prisma.VersionUncheckedUpdateManyWithoutCreatedByNestedInput
@@ -852,6 +1339,9 @@ export type UserUncheckedUpdateWithoutTokensInput = {
  */
 
 export type UserCountOutputType = {
+  accounts: number
+  sessions: number
+  authenticators: number
   memberships: number
   tokens: number
   pagesUpdated: number
@@ -860,6 +1350,9 @@ export type UserCountOutputType = {
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  accounts?: boolean | UserCountOutputTypeCountAccountsArgs
+  sessions?: boolean | UserCountOutputTypeCountSessionsArgs
+  authenticators?: boolean | UserCountOutputTypeCountAuthenticatorsArgs
   memberships?: boolean | UserCountOutputTypeCountMembershipsArgs
   tokens?: boolean | UserCountOutputTypeCountTokensArgs
   pagesUpdated?: boolean | UserCountOutputTypeCountPagesUpdatedArgs
@@ -875,6 +1368,27 @@ export type UserCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensi
    * Select specific fields to fetch from the UserCountOutputType
    */
   select?: Prisma.UserCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAccountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AccountWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.SessionWhereInput
+}
+
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountAuthenticatorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuthenticatorWhereInput
 }
 
 /**
@@ -919,8 +1433,13 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   passwordHash?: boolean
   role?: boolean
+  emailVerified?: boolean
+  image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
+  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  authenticators?: boolean | Prisma.User$authenticatorsArgs<ExtArgs>
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
   pagesUpdated?: boolean | Prisma.User$pagesUpdatedArgs<ExtArgs>
@@ -935,6 +1454,8 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   passwordHash?: boolean
   role?: boolean
+  emailVerified?: boolean
+  image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -945,6 +1466,8 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   passwordHash?: boolean
   role?: boolean
+  emailVerified?: boolean
+  image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -955,12 +1478,17 @@ export type UserSelectScalar = {
   name?: boolean
   passwordHash?: boolean
   role?: boolean
+  emailVerified?: boolean
+  image?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "passwordHash" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "passwordHash" | "role" | "emailVerified" | "image" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  accounts?: boolean | Prisma.User$accountsArgs<ExtArgs>
+  sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
+  authenticators?: boolean | Prisma.User$authenticatorsArgs<ExtArgs>
   memberships?: boolean | Prisma.User$membershipsArgs<ExtArgs>
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
   pagesUpdated?: boolean | Prisma.User$pagesUpdatedArgs<ExtArgs>
@@ -974,6 +1502,9 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    accounts: Prisma.$AccountPayload<ExtArgs>[]
+    sessions: Prisma.$SessionPayload<ExtArgs>[]
+    authenticators: Prisma.$AuthenticatorPayload<ExtArgs>[]
     memberships: Prisma.$SpaceMemberPayload<ExtArgs>[]
     tokens: Prisma.$ApiTokenPayload<ExtArgs>[]
     pagesUpdated: Prisma.$PagePayload<ExtArgs>[]
@@ -986,6 +1517,8 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string | null
     passwordHash: string | null
     role: $Enums.UserRole
+    emailVerified: Date | null
+    image: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1382,6 +1915,9 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  accounts<T extends Prisma.User$accountsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$accountsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AccountPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  sessions<T extends Prisma.User$sessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$sessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  authenticators<T extends Prisma.User$authenticatorsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$authenticatorsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuthenticatorPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   memberships<T extends Prisma.User$membershipsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$membershipsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SpaceMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   tokens<T extends Prisma.User$tokensArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$tokensArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiTokenPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   pagesUpdated<T extends Prisma.User$pagesUpdatedArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$pagesUpdatedArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PagePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1421,6 +1957,8 @@ export interface UserFieldRefs {
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'UserRole'>
+  readonly emailVerified: Prisma.FieldRef<"User", 'DateTime'>
+  readonly image: Prisma.FieldRef<"User", 'String'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -1808,6 +2346,78 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.accounts
+ */
+export type User$accountsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Account
+   */
+  select?: Prisma.AccountSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Account
+   */
+  omit?: Prisma.AccountOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AccountInclude<ExtArgs> | null
+  where?: Prisma.AccountWhereInput
+  orderBy?: Prisma.AccountOrderByWithRelationInput | Prisma.AccountOrderByWithRelationInput[]
+  cursor?: Prisma.AccountWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AccountScalarFieldEnum | Prisma.AccountScalarFieldEnum[]
+}
+
+/**
+ * User.sessions
+ */
+export type User$sessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Session
+   */
+  select?: Prisma.SessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Session
+   */
+  omit?: Prisma.SessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.SessionInclude<ExtArgs> | null
+  where?: Prisma.SessionWhereInput
+  orderBy?: Prisma.SessionOrderByWithRelationInput | Prisma.SessionOrderByWithRelationInput[]
+  cursor?: Prisma.SessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.SessionScalarFieldEnum | Prisma.SessionScalarFieldEnum[]
+}
+
+/**
+ * User.authenticators
+ */
+export type User$authenticatorsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Authenticator
+   */
+  select?: Prisma.AuthenticatorSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Authenticator
+   */
+  omit?: Prisma.AuthenticatorOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuthenticatorInclude<ExtArgs> | null
+  where?: Prisma.AuthenticatorWhereInput
+  orderBy?: Prisma.AuthenticatorOrderByWithRelationInput | Prisma.AuthenticatorOrderByWithRelationInput[]
+  cursor?: Prisma.AuthenticatorWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuthenticatorScalarFieldEnum | Prisma.AuthenticatorScalarFieldEnum[]
 }
 
 /**

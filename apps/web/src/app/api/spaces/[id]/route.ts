@@ -2,12 +2,15 @@ import { rm } from "node:fs/promises";
 import { prisma } from "@foundry/database";
 import { createSpaceSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { requireAdmin, requireAuth, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET(
 	request: Request,
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
+		await requireAuth();
+
 		const { id } = await params;
 		const space = await prisma.space.findUnique({
 			where: { id },
@@ -19,6 +22,11 @@ export async function GET(
 
 		return NextResponse.json(space);
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to fetch space:", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch space" },
@@ -32,6 +40,8 @@ export async function PATCH(
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
+		await requireAdmin();
+
 		const { id } = await params;
 		const space = await prisma.space.findUnique({
 			where: { id },
@@ -83,6 +93,11 @@ export async function PATCH(
 
 		return NextResponse.json(updatedSpace);
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to update space:", error);
 		return NextResponse.json(
 			{ error: "Failed to update space" },
@@ -96,6 +111,8 @@ export async function DELETE(
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
+		await requireAdmin();
+
 		const { id } = await params;
 		const space = await prisma.space.findUnique({
 			where: { id },
@@ -121,6 +138,11 @@ export async function DELETE(
 
 		return new NextResponse(null, { status: 204 });
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to delete space:", error);
 		return NextResponse.json(
 			{ error: "Failed to delete space" },

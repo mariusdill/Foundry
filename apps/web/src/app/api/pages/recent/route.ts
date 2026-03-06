@@ -1,8 +1,11 @@
 import { prisma } from "@foundry/database";
 import { NextResponse } from "next/server";
+import { requireAuth, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET(request: Request) {
 	try {
+		await requireAuth();
+
 		const { searchParams } = new URL(request.url);
 		const limitParam = searchParams.get("limit");
 
@@ -22,6 +25,11 @@ export async function GET(request: Request) {
 
 		return NextResponse.json(pages);
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to fetch recent pages:", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch recent pages" },

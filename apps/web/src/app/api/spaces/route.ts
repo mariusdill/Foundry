@@ -3,14 +3,22 @@ import { join } from "node:path";
 import { prisma } from "@foundry/database";
 import { createSpaceSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { requireAdmin, requireAuth, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET() {
 	try {
+		await requireAuth();
+
 		const spaces = await prisma.space.findMany({
 			orderBy: { name: "asc" },
 		});
 		return NextResponse.json(spaces);
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to fetch spaces:", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch spaces" },
@@ -21,6 +29,8 @@ export async function GET() {
 
 export async function POST(request: Request) {
 	try {
+		await requireAdmin();
+
 		const body = await request.json();
 		const result = createSpaceSchema.safeParse(body);
 
@@ -79,6 +89,11 @@ export async function POST(request: Request) {
 
 		return NextResponse.json(space, { status: 201 });
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to create space:", error);
 		return NextResponse.json(
 			{ error: "Failed to create space" },

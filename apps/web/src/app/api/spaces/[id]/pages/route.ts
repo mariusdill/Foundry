@@ -1,15 +1,19 @@
 import { prisma } from "@foundry/database";
 import { NextResponse } from "next/server";
+import { requireAuth, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET(
 	request: Request,
 	{ params }: { params: Promise<{ id: string }> },
 ) {
 	try {
+		await requireAuth();
+
 		const { id } = await params;
 		const { searchParams } = new URL(request.url);
 		const status = searchParams.get("status");
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const where: any = { spaceId: id };
 		if (status) {
 			where.status = status;
@@ -23,6 +27,11 @@ export async function GET(
 
 		return NextResponse.json(pages);
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to fetch space pages:", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch space pages" },

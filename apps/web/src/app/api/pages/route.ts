@@ -5,9 +5,12 @@ import {
 } from "@foundry/database";
 import { createPageSchema } from "@foundry/shared";
 import { NextResponse } from "next/server";
+import { requireAuth, requireRole, toAuthErrorResponse } from "@/lib/auth";
 
 export async function GET(request: Request) {
 	try {
+		await requireAuth();
+
 		const { searchParams } = new URL(request.url);
 		const spaceId = searchParams.get("spaceId");
 
@@ -21,6 +24,11 @@ export async function GET(request: Request) {
 
 		return NextResponse.json(pages);
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to fetch pages:", error);
 		return NextResponse.json(
 			{ error: "Failed to fetch pages" },
@@ -31,6 +39,8 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
 	try {
+		await requireRole("editor");
+
 		const body = await request.json();
 		const result = createPageSchema.safeParse(body);
 
@@ -78,7 +88,7 @@ export async function POST(request: Request) {
 
 		const filePath = resolvePageFilePath(
 			process.env.DATA_DIR,
-			space.kind as any,
+			space.kind as "runbooks" | "projects",
 			space.slug,
 			data.path,
 		);
@@ -107,11 +117,11 @@ export async function POST(request: Request) {
 			slug: page.slug,
 			space: space.slug,
 			path: page.path,
-			status: page.status as any,
+			status: page.status as "draft" | "stable" | "archived",
 			tags: page.tags,
 			updatedBy: page.updatedById || "system",
 			updatedAt: page.updatedAt.toISOString(),
-			source: page.source as any,
+			source: page.source as "human" | "agent",
 			pinned: page.pinned,
 		};
 
@@ -129,6 +139,11 @@ export async function POST(request: Request) {
 
 		return NextResponse.json(page, { status: 201 });
 	} catch (error) {
+		const authResponse = toAuthErrorResponse(error);
+		if (authResponse) {
+			return authResponse;
+		}
+
 		console.error("Failed to create page:", error);
 		return NextResponse.json(
 			{ error: "Failed to create page" },
