@@ -11,6 +11,7 @@ import {
 	User as UserIcon,
 } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -38,6 +39,42 @@ interface PageListProps {
 }
 
 export function PageList({ pages, spaceId }: PageListProps) {
+	const [sortConfig, setSortConfig] = useState<{
+		key: keyof PageWithUser | "updatedBy";
+		direction: "asc" | "desc";
+	} | null>(null);
+
+	const sortedPages = [...pages].sort((a, b) => {
+		if (!sortConfig) return 0;
+
+		const { key, direction } = sortConfig;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let aValue: any = a[key as keyof PageWithUser];
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		let bValue: any = b[key as keyof PageWithUser];
+
+		if (key === "updatedBy") {
+			aValue = a.updatedBy?.name || a.updatedBy?.email || "";
+			bValue = b.updatedBy?.name || b.updatedBy?.email || "";
+		}
+
+		if (aValue < bValue) return direction === "asc" ? -1 : 1;
+		if (aValue > bValue) return direction === "asc" ? 1 : -1;
+		return 0;
+	});
+
+	const requestSort = (key: keyof PageWithUser | "updatedBy") => {
+		let direction: "asc" | "desc" = "asc";
+		if (
+			sortConfig &&
+			sortConfig.key === key &&
+			sortConfig.direction === "asc"
+		) {
+			direction = "desc";
+		}
+		setSortConfig({ key, direction });
+	};
+
 	if (pages.length === 0) {
 		return (
 			<div className="flex flex-col items-center justify-center py-12 text-center border rounded-lg border-dashed">
@@ -57,16 +94,17 @@ export function PageList({ pages, spaceId }: PageListProps) {
 			<Table>
 				<TableHeader>
 					<TableRow>
-						<TableHead>Title</TableHead>
-						<TableHead>Path</TableHead>
-						<TableHead>Status</TableHead>
-						<TableHead>Source</TableHead>
-						<TableHead>Updated</TableHead>
+						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("title")}>Title</TableHead>
+						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("path")}>Path</TableHead>
+						<TableHead>Tags</TableHead>
+						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("status")}>Status</TableHead>
+						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("source")}>Source</TableHead>
+						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("updatedAt")}>Updated</TableHead>
 						<TableHead className="w-[50px]"></TableHead>
 					</TableRow>
 				</TableHeader>
 				<TableBody>
-					{pages.map((page) => (
+					{sortedPages.map((page) => (
 						<TableRow key={page.id} className="group">
 							<TableCell className="font-medium">
 								<Link
@@ -81,6 +119,15 @@ export function PageList({ pages, spaceId }: PageListProps) {
 							</TableCell>
 							<TableCell className="text-muted-foreground text-sm">
 								{page.path}
+							</TableCell>
+							<TableCell>
+								<div className="flex flex-wrap gap-1">
+									{page.tags?.map((tag) => (
+										<Badge key={tag} variant="outline" className="text-xs font-normal">
+											{tag}
+										</Badge>
+									))}
+								</div>
 							</TableCell>
 							<TableCell>
 								<Badge

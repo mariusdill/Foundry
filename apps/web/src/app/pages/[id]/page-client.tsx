@@ -35,11 +35,8 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-	Tooltip,
-	TooltipContent,
-	TooltipTrigger,
-} from "@/components/ui/tooltip";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { MarkdownPreview } from "@/components/markdown-preview";
 
 type PageData = {
 	id: string;
@@ -267,15 +264,8 @@ export function PageClient({ id }: { id: string }) {
 
 				<Separator />
 
-				{/* Main Content Area (Markdown Placeholder) */}
-				<div className="prose prose-neutral dark:prose-invert max-w-none">
-					<div className="p-8 border border-dashed rounded-lg bg-muted/10 text-center text-muted-foreground">
-						<p>Markdown preview placeholder for P2-12</p>
-						<p className="text-xs mt-2 opacity-50">
-							Content length: {page.markdown?.length || 0} characters
-						</p>
-					</div>
-				</div>
+				{/* Main Content Area */}
+				<MarkdownPreview content={page.markdown || ""} />
 			</div>
 
 			{/* Right Rail (Optional for v1) */}

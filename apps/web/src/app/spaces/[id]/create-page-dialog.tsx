@@ -32,14 +32,14 @@ export function CreatePageDialog({
 
 	const [formData, setFormData] = useState({
 		title: "",
+		slug: "",
 		path: "",
 	});
 
-	// Auto-generate path from title if path is empty or was auto-generated
+	// Auto-generate slug and path from title if they are empty or were auto-generated
 	const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const newTitle = e.target.value;
 		setFormData((prev) => {
-			// If path is empty or matches the slugified previous title, update it
 			const prevSlug = prev.title
 				.toLowerCase()
 				.replace(/[^a-z0-9]+/g, "-")
@@ -49,10 +49,17 @@ export function CreatePageDialog({
 				.replace(/[^a-z0-9]+/g, "-")
 				.replace(/(^-|-$)+/g, "");
 
-			if (prev.path === "" || prev.path === `/${prevSlug}`) {
-				return { ...prev, title: newTitle, path: newSlug ? `/${newSlug}` : "" };
+			const updates: typeof prev = { ...prev, title: newTitle };
+
+			if (prev.slug === "" || prev.slug === prevSlug) {
+				updates.slug = newSlug;
 			}
-			return { ...prev, title: newTitle };
+
+			if (prev.path === "" || prev.path === `/${prevSlug}`) {
+				updates.path = newSlug ? `/${newSlug}` : "";
+			}
+
+			return updates;
 		});
 	};
 
@@ -67,6 +74,7 @@ export function CreatePageDialog({
 				headers: { "Content-Type": "application/json" },
 				body: JSON.stringify({
 					title: formData.title,
+					slug: formData.slug,
 					path: formData.path,
 				}),
 			});
@@ -119,6 +127,19 @@ export function CreatePageDialog({
 						</div>
 
 						<div className="grid gap-2">
+							<Label htmlFor="slug">Slug</Label>
+							<Input
+								id="slug"
+								placeholder="e.g. getting-started"
+								value={formData.slug}
+								onChange={(e) =>
+									setFormData({ ...formData, slug: e.target.value })
+								}
+								required
+							/>
+						</div>
+
+						<div className="grid gap-2">
 							<Label htmlFor="path">Path</Label>
 							<Input
 								id="path"
@@ -146,7 +167,7 @@ export function CreatePageDialog({
 						</Button>
 						<Button
 							type="submit"
-							disabled={isLoading || !formData.title || !formData.path}
+							disabled={isLoading || !formData.title || !formData.slug || !formData.path}
 						>
 							{isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 							Create Page

@@ -16,6 +16,13 @@ import { Input } from "@/components/ui/input";
 import { CreatePageDialog } from "./create-page-dialog";
 import { PageList } from "./page-list";
 import { PageTree } from "./page-tree";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 
 type PageWithUser = Page & { updatedBy: User | null };
 
@@ -27,7 +34,8 @@ interface SpaceViewProps {
 export function SpaceView({ space, initialPages }: SpaceViewProps) {
 	const [sidebarOpen, setSidebarOpen] = useState(true);
 	const [searchQuery, setSearchQuery] = useState("");
-	const [statusFilter] = useState<string>("all");
+	const [statusFilter, setStatusFilter] = useState<string>("all");
+	const [sourceFilter, setSourceFilter] = useState<string>("all");
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
 	// Filter pages
@@ -37,7 +45,9 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 			page.path.toLowerCase().includes(searchQuery.toLowerCase());
 		const matchesStatus =
 			statusFilter === "all" || page.status === statusFilter;
-		return matchesSearch && matchesStatus;
+		const matchesSource =
+			sourceFilter === "all" || page.source === sourceFilter;
+		return matchesSearch && matchesStatus && matchesSource;
 	});
 
 	return (
@@ -113,7 +123,28 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 										onChange={(e) => setSearchQuery(e.target.value)}
 									/>
 								</div>
-								{/* Status Filter Dropdown could go here */}
+								<Select value={statusFilter} onValueChange={setStatusFilter}>
+									<SelectTrigger className="w-[130px]">
+										<SelectValue placeholder="Status" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="all">All Status</SelectItem>
+										<SelectItem value="draft">Draft</SelectItem>
+										<SelectItem value="stable">Stable</SelectItem>
+										<SelectItem value="archived">Archived</SelectItem>
+									</SelectContent>
+								</Select>
+
+								<Select value={sourceFilter} onValueChange={setSourceFilter}>
+									<SelectTrigger className="w-[130px]">
+										<SelectValue placeholder="Source" />
+									</SelectTrigger>
+									<SelectContent>
+										<SelectItem value="all">All Sources</SelectItem>
+										<SelectItem value="human">Human</SelectItem>
+										<SelectItem value="agent">Agent</SelectItem>
+									</SelectContent>
+								</Select>
 							</div>
 						</div>
 

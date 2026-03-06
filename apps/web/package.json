@@ -17,6 +17,7 @@
 		"@foundry/ui": "workspace:*",
 		"@hookform/resolvers": "^5.2.2",
 		"@radix-ui/react-dialog": "^1.1.15",
+		"@tailwindcss/typography": "^0.5.19",
 		"@tanstack/react-table": "^8.21.3",
 		"bcryptjs": "^3.0.3",
 		"class-variance-authority": "^0.7.1",
@@ -24,6 +25,7 @@
 		"cmdk": "^1.1.1",
 		"date-fns": "^4.1.0",
 		"framer-motion": "^12.35.0",
+		"highlight.js": "^11.11.1",
 		"lucide-react": "^0.542.0",
 		"next": "15.5.12",
 		"next-auth": "5.0.0-beta.30",
@@ -32,6 +34,7 @@
 		"react-dom": "19.2.4",
 		"react-hook-form": "^7.71.2",
 		"react-markdown": "^10.1.0",
+		"rehype-highlight": "^7.0.2",
 		"remark-gfm": "^4.0.1",
 		"tailwind-merge": "^3.5.0",
 		"zod": "^4.3.6"
