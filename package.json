@@ -1,0 +1,24 @@
+{
+  "name": "foundry",
+  "version": "0.1.0",
+  "private": true,
+  "packageManager": "pnpm@10.30.3",
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev --parallel",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "typecheck": "turbo run typecheck",
+    "db:generate": "pnpm --filter @foundry/database prisma:generate",
+    "db:migrate": "pnpm --filter @foundry/database prisma:migrate",
+    "db:push": "pnpm --filter @foundry/database prisma:push",
+    "db:seed": "pnpm --filter @foundry/database db:seed"
+  },
+  "devDependencies": {
+    "turbo": "^2.6.1"
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
+}

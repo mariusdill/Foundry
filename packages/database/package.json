@@ -1,0 +1,33 @@
+{
+  "name": "@foundry/database",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev",
+    "prisma:push": "prisma db push",
+    "db:seed": "tsx src/seed.ts"
+  },
+  "dependencies": {
+    "@foundry/shared": "workspace:*",
+    "@prisma/adapter-pg": "^7.4.2",
+    "@prisma/client": "7.4.2",
+    "dotenv": "^17.3.1",
+    "gray-matter": "^4.0.3",
+    "pg": "^8.20.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.19.37",
+    "@types/pg": "^8.18.0",
+    "prisma": "7.4.2",
+    "tsx": "^4.20.6",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.4"
+  }
+}

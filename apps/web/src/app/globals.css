@@ -1,0 +1,88 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+
+:root {
+  color-scheme: dark;
+  --radius: 0.625rem;
+  --background: #060a11;
+  --foreground: #eef4ff;
+  --card: #121b28;
+  --card-foreground: #eef4ff;
+  --popover: #121b28;
+  --popover-foreground: #eef4ff;
+  --primary: #5c7cff;
+  --primary-foreground: #f8fbff;
+  --secondary: rgba(18, 27, 40, 0.82);
+  --secondary-foreground: #eef4ff;
+  --muted: rgba(18, 27, 40, 0.68);
+  --muted-foreground: #a6b9d3;
+  --accent: rgba(24, 35, 52, 0.92);
+  --accent-foreground: #eef4ff;
+  --destructive: #f06b74;
+  --border: rgba(145, 164, 191, 0.16);
+  --input: rgba(145, 164, 191, 0.18);
+  --surface-1: #0d131d;
+  --surface-2: #121b28;
+  --surface-3: #182334;
+  --surface-4: #223147;
+  --border-subtle: rgba(145, 164, 191, 0.16);
+  --border-strong: rgba(175, 194, 221, 0.28);
+  --text-primary: #eef4ff;
+  --text-secondary: #a6b9d3;
+  --text-muted: #6d7f99;
+  --accent-human: #5c7cff;
+  --accent-agent: #8b6df8;
+  --info: #5ab8ff;
+  --success: #4dcc87;
+  --warning: #f0b24d;
+  --danger: #f06b74;
+  --ring: oklch(0.704 0.04 256.788);
+  --shadow-panel: 0 24px 80px rgba(3, 7, 15, 0.45);
+  --shadow-soft: 0 12px 30px rgba(4, 10, 19, 0.22);
+}
+
+* {
+  border-color: var(--border-subtle);
+}
+
+html {
+  min-height: 100%;
+  background:
+    radial-gradient(circle at top left, rgba(92, 124, 255, 0.18), transparent 24%),
+    radial-gradient(circle at top right, rgba(139, 109, 248, 0.16), transparent 22%),
+    linear-gradient(180deg, #08111d 0%, #060a11 52%, #08111a 100%);
+}
+
+body {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(90, 184, 255, 0.08), transparent 20%),
+    radial-gradient(circle at 80% 10%, rgba(139, 109, 248, 0.12), transparent 24%),
+    linear-gradient(180deg, rgba(10, 17, 29, 0.82) 0%, rgba(6, 10, 17, 0.96) 50%, rgba(8, 17, 26, 1) 100%);
+  color: var(--text-primary);
+  font-family: var(--font-manrope), sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.22), rgba(0, 0, 0, 0));
+}
+
+::selection {
+  background: rgba(92, 124, 255, 0.35);
+  color: var(--text-primary);
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
