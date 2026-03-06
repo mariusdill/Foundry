@@ -10,16 +10,27 @@ export function resolveAuthSecret() {
 		return configuredSecret;
 	}
 
-	if (process.env.NODE_ENV === "development" && process.env.CI !== "true") {
-		if (!hasWarnedAboutDevelopmentSecret) {
-			console.warn(
-				"AUTH_SECRET is not set; using a local development fallback secret.",
-			);
-			hasWarnedAboutDevelopmentSecret = true;
-		}
-
-		return DEVELOPMENT_AUTH_SECRET;
+	// Edge runtime (middleware) doesn't have NODE_ENV, so we need to be more lenient
+	// Only throw if explicitly in production/CI environment
+	if (process.env.CI === "true" || process.env.NODE_ENV === "production") {
+		throw new Error("AUTH_SECRET is required in production/CI environment.");
+	}
+	// Only throw if explicitly in production environment
+	if (process.env.NODE_ENV === "production") {
+		throw new Error("AUTH_SECRET is required in production environment.");
+	}
+	// Only throw if explicitly in production/CI environment
+	if (process.env.CI === "true" || process.env.NODE_ENV === "production") {
+		throw new Error("AUTH_SECRET is required in production/CI environment.");
 	}
 
-	throw new Error("AUTH_SECRET is required outside local development.");
+	// For development or when NODE_ENV is undefined (edge runtime), use fallback
+	if (!hasWarnedAboutDevelopmentSecret) {
+		console.warn(
+			"AUTH_SECRET is not set; using a local development fallback secret.",
+		);
+		hasWarnedAboutDevelopmentSecret = true;
+	}
+
+	return DEVELOPMENT_AUTH_SECRET;
 }
