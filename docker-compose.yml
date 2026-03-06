@@ -1,0 +1,39 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: foundry
+      POSTGRES_PASSWORD: foundry
+      POSTGRES_DB: foundry
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U foundry"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    environment:
+      DATABASE_URL: postgresql://foundry:foundry@postgres:5432/foundry?schema=public
+      AUTH_SECRET: change-me-in-production
+      NEXTAUTH_URL: http://localhost:3000
+      DATA_DIR: /app/data
+    volumes:
+      - foundry_data:/app/data
+    ports:
+      - "3000:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+volumes:
+  postgres_data:
+  foundry_data:

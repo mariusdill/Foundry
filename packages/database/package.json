@@ -9,6 +9,8 @@
 		"build": "tsc -p tsconfig.json",
 		"lint": "eslint .",
 		"typecheck": "tsc -p tsconfig.json --noEmit",
+		"test": "vitest",
+		"test:run": "vitest run",
 		"prisma:generate": "prisma generate",
 		"prisma:migrate": "prisma migrate dev",
 		"prisma:push": "prisma db push",

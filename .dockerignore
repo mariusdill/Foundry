@@ -1,0 +1,71 @@
+# Docker ignore file for Foundry
+# Exclude files not needed in Docker build
+
+# Dependencies
+node_modules
+.pnpm-store
+
+# Lock files - explicitly include pnpm lockfile
+!pnpm-lock.yaml
+node_modules
+.pnpm-store
+
+# Git
+.git
+.gitignore
+
+# Build outputs
+dist
+.build
+.next
+out
+*.tsbuildinfo
+
+# IDE
+.idea
+.vscode
+*.swp
+*.swo
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+
+# Testing
+coverage
+.nyc_output
+
+# Temporary files
+*.tmp
+*.temp
+.DS_Store
+Thumbs.db
+
+# Documentation
+README.md
+docs
+*.md
+
+# Docker
+apps/web/Dockerfile
+docker-compose*.yml
+.docker
+Dockerfile
+docker-compose*.yml
+.docker
+
+# CI/CD
+.github
+.gitlab-ci.yml
+.travis.yml
+
+# Misc
+*.tgz
+.cache
