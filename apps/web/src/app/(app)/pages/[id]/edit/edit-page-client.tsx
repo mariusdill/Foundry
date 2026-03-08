@@ -1,19 +1,11 @@
 "use client";
 
 import { ArrowLeft, Edit2, Eye, Loader2, Save, X } from "lucide-react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MarkdownPreview } from "@/components/markdown-preview";
+import { PageChrome } from "@/components/page-chrome";
 import { TiptapEditor } from "@/components/tiptap-editor";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -168,50 +160,32 @@ export function EditPageClient({ id }: { id: string }) {
 
 	return (
 		<div className="mx-auto flex max-w-6xl flex-col gap-5">
-			{/* Header Section */}
-			<div className="flex flex-col justify-between gap-4 border-b border-[color:var(--border-subtle)] pb-5 sm:flex-row sm:items-center">
-				<div className="space-y-1">
-					<Breadcrumb>
-						<BreadcrumbList>
-							<BreadcrumbItem>
-								<BreadcrumbLink asChild>
-									<Link href={`/spaces/${page.space.id}`}>
-										{page.space.name}
-									</Link>
-								</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbLink asChild>
-									<Link href={`/pages/${id}`}>{page.title}</Link>
-								</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbPage>Edit</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
-					<h1 className="text-[20px] font-medium tracking-tight text-foreground">
-						Edit page
-					</h1>
-				</div>
-
-				<div className="flex items-center gap-2">
-					<Button variant="outline" onClick={handleCancel} disabled={saving}>
-						<X className="h-4 w-4 mr-2" />
-						Cancel
-					</Button>
-					<Button onClick={handleSave} disabled={!isDirty || saving}>
-						{saving ? (
-							<Loader2 className="h-4 w-4 mr-2 animate-spin" />
-						) : (
-							<Save className="h-4 w-4 mr-2" />
-						)}
-						Save Changes
-					</Button>
-				</div>
-			</div>
+			<PageChrome
+				title="Edit page"
+				breadcrumbs={[
+					{ label: "Workspace", href: "/" },
+					{ label: page.space.name, href: `/spaces/${page.space.id}` },
+					{ label: page.title, href: `/pages/${id}` },
+					{ label: "Edit" },
+				]}
+				topBarTitle="Edit page"
+				actions={
+					<>
+						<Button variant="outline" onClick={handleCancel} disabled={saving}>
+							<X className="mr-2 h-4 w-4" />
+							Cancel
+						</Button>
+						<Button onClick={handleSave} disabled={!isDirty || saving}>
+							{saving ? (
+								<Loader2 className="mr-2 h-4 w-4 animate-spin" />
+							) : (
+								<Save className="mr-2 h-4 w-4" />
+							)}
+							Save Changes
+						</Button>
+					</>
+				}
+			/>
 
 			{validationError && (
 				<div className="rounded-md border border-destructive/20 bg-destructive/10 p-3 text-[13px] text-destructive">
@@ -219,7 +193,6 @@ export function EditPageClient({ id }: { id: string }) {
 				</div>
 			)}
 
-			{/* Form Section */}
 			<div className="space-y-5">
 				<div className="space-y-4">
 					<div className="space-y-2">

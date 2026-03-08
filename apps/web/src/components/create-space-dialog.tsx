@@ -1,15 +1,12 @@
 "use client";
 
-import {
-	createSpaceSchema,
-	slugifyValue,
-} from "@foundry/shared";
+import { createSpaceSchema, slugifyValue } from "@foundry/shared";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-
+import type { z } from "zod";
 import { Button } from "@/components/ui/button";
 import {
 	Dialog,
@@ -39,18 +36,22 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 
-import { z } from "zod";
-
 type FormValues = z.input<typeof createSpaceSchema>;
 
 interface CreateSpaceDialogProps {
-  open?: boolean;
-  onOpenChange?: (open: boolean) => void;
-  onSuccess?: () => void;
+	open?: boolean;
+	onOpenChange?: (open: boolean) => void;
+	onSuccess?: () => void;
 }
 
-export function CreateSpaceDialog({ open: controlledOpen, onOpenChange: setControlledOpen, onSuccess }: CreateSpaceDialogProps = {}) {
+export function CreateSpaceDialog({
+	open: controlledOpen,
+	onOpenChange: setControlledOpen,
+	onSuccess,
+}: CreateSpaceDialogProps = {}) {
 	const [uncontrolledOpen, setUncontrolledOpen] = useState(false);
+	const isControlled =
+		controlledOpen !== undefined || setControlledOpen !== undefined;
 	const open = controlledOpen !== undefined ? controlledOpen : uncontrolledOpen;
 	const setOpen = setControlledOpen || setUncontrolledOpen;
 	const [isLoading, setIsLoading] = useState(false);
@@ -115,12 +116,14 @@ export function CreateSpaceDialog({ open: controlledOpen, onOpenChange: setContr
 
 	return (
 		<Dialog open={open} onOpenChange={setOpen}>
-			<DialogTrigger asChild>
-				<Button>
-					<Plus className="w-4 h-4 mr-2" />
-					Create Space
-				</Button>
-			</DialogTrigger>
+			{isControlled ? null : (
+				<DialogTrigger asChild>
+					<Button>
+						<Plus className="w-4 h-4 mr-2" />
+						Create Space
+					</Button>
+				</DialogTrigger>
+			)}
 			<DialogContent className="sm:max-w-[425px]">
 				<DialogHeader>
 					<DialogTitle>Create Space</DialogTitle>

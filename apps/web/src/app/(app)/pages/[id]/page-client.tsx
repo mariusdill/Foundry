@@ -16,15 +16,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MarkdownPreview } from "@/components/markdown-preview";
+import { PageChrome } from "@/components/page-chrome";
 import { Badge } from "@/components/ui/badge";
-import {
-	Breadcrumb,
-	BreadcrumbItem,
-	BreadcrumbLink,
-	BreadcrumbList,
-	BreadcrumbPage,
-	BreadcrumbSeparator,
-} from "@/components/ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import {
 	DropdownMenu,
@@ -134,32 +127,18 @@ export function PageClient({ id }: { id: string }) {
 
 	return (
 		<div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row">
-			{/* Main Content Area */}
 			<div className="min-w-0 flex-1 space-y-6">
-				{/* Header Section */}
-				<div className="space-y-3 border-b border-[color:var(--border-subtle)] pb-5">
-					<Breadcrumb>
-						<BreadcrumbList>
-							<BreadcrumbItem>
-								<BreadcrumbLink asChild>
-									<Link href={`/spaces/${page.space.id}`}>
-										{page.space.name}
-									</Link>
-								</BreadcrumbLink>
-							</BreadcrumbItem>
-							<BreadcrumbSeparator />
-							<BreadcrumbItem>
-								<BreadcrumbPage>{page.title}</BreadcrumbPage>
-							</BreadcrumbItem>
-						</BreadcrumbList>
-					</Breadcrumb>
-
-					<div className="flex items-start justify-between gap-4">
-						<h1 className="break-words text-[28px] font-medium tracking-tight text-foreground">
-							{page.title}
-						</h1>
-
-						<div className="flex items-center gap-2 shrink-0">
+				<PageChrome
+					title={page.title}
+					titleClassName="text-[28px] sm:text-[28px]"
+					breadcrumbs={[
+						{ label: "Workspace", href: "/" },
+						{ label: page.space.name, href: `/spaces/${page.space.id}` },
+						{ label: page.title },
+					]}
+					topBarTitle={page.title}
+					actions={
+						<>
 							<Tooltip>
 								<TooltipTrigger asChild>
 									<Button
@@ -184,7 +163,7 @@ export function PageClient({ id }: { id: string }) {
 
 							<Button variant="outline" size="sm" asChild>
 								<Link href={`/pages/${id}/edit`}>
-									<Edit className="h-4 w-4 mr-2" />
+									<Edit className="mr-2 h-4 w-4" />
 									Edit
 								</Link>
 							</Button>
@@ -198,7 +177,7 @@ export function PageClient({ id }: { id: string }) {
 								<DropdownMenuContent align="end">
 									{page.status === "draft" && (
 										<DropdownMenuItem>
-											<Upload className="h-4 w-4 mr-2" />
+											<Upload className="mr-2 h-4 w-4" />
 											Promote to Stable
 										</DropdownMenuItem>
 									)}
@@ -206,16 +185,16 @@ export function PageClient({ id }: { id: string }) {
 										<>
 											<DropdownMenuSeparator />
 											<DropdownMenuItem className="text-destructive focus:text-destructive">
-												<Archive className="h-4 w-4 mr-2" />
+												<Archive className="mr-2 h-4 w-4" />
 												Archive
 											</DropdownMenuItem>
 										</>
 									)}
 								</DropdownMenuContent>
 							</DropdownMenu>
-						</div>
-					</div>
-
+						</>
+					}
+				>
 					<div className="flex flex-wrap items-center gap-2">
 						<Badge
 							variant={
@@ -240,7 +219,7 @@ export function PageClient({ id }: { id: string }) {
 							</Badge>
 						))}
 					</div>
-				</div>
+				</PageChrome>
 
 				<div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-[10px] border border-[color:var(--border-subtle)] bg-surface-2 px-4 py-3 text-[13px] text-muted-foreground">
 					<div className="flex items-center gap-1.5">
@@ -272,11 +251,9 @@ export function PageClient({ id }: { id: string }) {
 
 				<Separator />
 
-				{/* Main Content Area */}
 				<MarkdownPreview content={page.markdown || ""} />
 			</div>
 
-			{/* Right Rail (Optional for v1) */}
 			<div className="w-full shrink-0 space-y-4 lg:w-72">
 				<Tabs defaultValue="history" className="w-full">
 					<TabsList className="w-full grid grid-cols-3">

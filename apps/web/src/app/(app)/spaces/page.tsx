@@ -1,5 +1,4 @@
 import { prisma } from "@foundry/database";
-import { AppShell } from "@/components/app-shell";
 import { requireAuth } from "@/lib/auth";
 import { SpacesClient } from "./spaces-client";
 
@@ -15,9 +14,5 @@ export default async function SpacesPage() {
 		},
 	});
 
-	return (
-		<AppShell>
-			<SpacesClient initialSpaces={spaces} />
-		</AppShell>
-	);
+	return <SpacesClient initialSpaces={spaces} />;
 }
