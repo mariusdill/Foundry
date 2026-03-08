@@ -86,7 +86,7 @@ export function CreatePageDialog({
 
 			const page = await response.json();
 			onOpenChange(false);
-			router.push(`/spaces/${spaceId}/pages/${page.id}`);
+			router.push(`/pages/${page.id}`);
 			router.refresh();
 		} catch (err) {
 			setError(err instanceof Error ? err.message : "An error occurred");
@@ -167,7 +167,9 @@ export function CreatePageDialog({
 						</Button>
 						<Button
 							type="submit"
-							disabled={isLoading || !formData.title || !formData.slug || !formData.path}
+							disabled={
+								isLoading || !formData.title || !formData.slug || !formData.path
+							}
 						>
 							{isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
 							Create Page

@@ -92,7 +92,7 @@ function TreeNodeItem({
 	const hasChildren = Object.keys(node.children).length > 0;
 	const isPage = !!node.page;
 
-	const href = isPage ? `/spaces/${spaceId}/pages/${node.page?.id}` : "#";
+	const href = isPage ? `/pages/${node.page?.id}` : "#";
 	const isActive = currentPathname === href;
 
 	return (

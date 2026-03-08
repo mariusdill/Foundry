@@ -7,70 +7,63 @@
 :root {
   color-scheme: dark;
 
-  /* === Core Design Tokens - Ace Design Studio Inspired === */
+  --radius: 0.5rem;
 
-  /* Radius - Modern, clean corners */
-  --radius: 0.375rem;
+  --background: #09090b;
+  --foreground: #f5f5f7;
 
-  /* Background - crisp dark */
-  --background: #0a0a0b;
-  --foreground: #ededed;
-  
-  /* Surface levels */
-  --card: #111113;
-  --card-foreground: #ededed;
-  --popover: #111113;
-  --popover-foreground: #ededed;
-  --primary: #ededed;
-  --primary-foreground: #0a0a0b;
-  --secondary: #1a1a1d;
-  --secondary-foreground: #ededed;
-  --muted: #1a1a1d;
-  --muted-foreground: #a1a1aa;
-  --accent: #1a1a1d;
-  --accent-foreground: #ededed;
-  
+  --card: #111214;
+  --card-foreground: #f5f5f7;
+  --popover: #111214;
+  --popover-foreground: #f5f5f7;
+  --primary: #f5f5f7;
+  --primary-foreground: #09090b;
+  --secondary: #17181b;
+  --secondary-foreground: #f5f5f7;
+  --muted: #17181b;
+  --muted-foreground: #8f93a2;
+  --accent: #17181b;
+  --accent-foreground: #f5f5f7;
+
   /* Status colors */
   --destructive: #ef4444;
-  --destructive-foreground: #ededed;
-  --border: rgba(255, 255, 255, 0.04);
-  --input: rgba(255, 255, 255, 0.04);
-  --ring: rgba(255, 255, 255, 0.1);
-  
-  /* Sidebar */
-  --sidebar: #0a0a0b;
-  --sidebar-foreground: #ededed;
-  --sidebar-primary: #ededed;
-  --sidebar-primary-foreground: #0a0a0b;
-  --sidebar-accent: #1a1a1d;
-  --sidebar-accent-foreground: #ededed;
-  --sidebar-border: rgba(255, 255, 255, 0.04);
-  --sidebar-ring: rgba(255, 255, 255, 0.1);
+  --destructive-foreground: #f5f5f7;
+  --border: rgba(255, 255, 255, 0.08);
+  --input: rgba(255, 255, 255, 0.08);
+  --ring: rgba(255, 255, 255, 0.14);
 
-  /* Additional tokens kept for compatibility */
-  --surface-1: #0a0a0b;
-  --surface-2: #111113;
-  --surface-3: #1a1a1d;
-  --surface-4: #232326;
-  --border-subtle: rgba(255, 255, 255, 0.04);
-  --border-strong: rgba(255, 255, 255, 0.08);
-  --text-primary: #ededed;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
+  --sidebar: #09090b;
+  --sidebar-foreground: #f5f5f7;
+  --sidebar-primary: #f5f5f7;
+  --sidebar-primary-foreground: #09090b;
+  --sidebar-accent: #17181b;
+  --sidebar-accent-foreground: #f5f5f7;
+  --sidebar-border: rgba(255, 255, 255, 0.08);
+  --sidebar-ring: rgba(255, 255, 255, 0.14);
+
+  --surface-1: #09090b;
+  --surface-2: #111214;
+  --surface-3: #17181b;
+  --surface-4: #1f2023;
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-strong: rgba(255, 255, 255, 0.12);
+  --text-primary: #f5f5f7;
+  --text-secondary: #c7c9d1;
+  --text-muted: #8f93a2;
   --success: #22c55e;
   --warning: #f59e0b;
   --danger: #ef4444;
   --info: #3b82f6;
-  --accent-human: #ededed;
-  --accent-agent: #a1a1aa;
+  --accent-human: #93c5fd;
+  --accent-agent: #c4b5fd;
   --accent-draft: #f59e0b;
   --accent-stable: #22c55e;
-  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
-  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
-  --shadow-panel: 0 12px 32px rgba(0, 0, 0, 0.4);
-  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.2);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.22);
+  --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.22);
+  --shadow-lg: 0 18px 40px rgba(0, 0, 0, 0.28);
+  --shadow-xl: 0 24px 56px rgba(0, 0, 0, 0.34);
+  --shadow-panel: 0 18px 48px rgba(0, 0, 0, 0.32);
+  --shadow-soft: 0 12px 30px rgba(0, 0, 0, 0.18);
   --shadow-glow: none;
 }
 
@@ -167,7 +160,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
-  letter-spacing: -0.01em;
+  letter-spacing: -0.012em;
+  line-height: 1.45;
 }
 
 /* Subtle grid pattern overlay removed for cleaner look */
@@ -184,11 +178,9 @@ a {
   text-decoration: none;
 }
 
-/* Focus styles */
 :focus-visible {
-  outline: none;
-  ring: 2px;
-  ring-color: var(--ring);
+  outline: 2px solid transparent;
+  box-shadow: 0 0 0 2px var(--ring);
 }
 
 /* Scrollbar styling */
@@ -214,8 +206,8 @@ a {
 
 /* Glass effect */
 .glass {
-  background: rgba(17, 17, 19, 0.7);
-  backdrop-filter: blur(12px);
+  background: rgba(17, 18, 20, 0.72);
+  backdrop-filter: blur(10px);
   border: 1px solid var(--border);
 }
 
@@ -234,19 +226,18 @@ a {
 
 /* Text gradient */
 .text-gradient {
-  background: linear-gradient(135deg, #ededed 0%, #a1a1aa 100%);
+  background: linear-gradient(135deg, #f5f5f7 0%, #c7c9d1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .text-gradient-primary {
-  background: linear-gradient(135deg, #ededed 0%, #a1a1aa 100%);
+  background: linear-gradient(135deg, #f5f5f7 0%, #c7c9d1 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
-
 
 /* Tiptap Editor Placeholder */
 .tiptap p.is-editor-empty:first-child::before {

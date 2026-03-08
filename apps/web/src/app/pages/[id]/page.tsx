@@ -1,3 +1,4 @@
+import { AppShell } from "@/components/app-shell";
 import { requireAuth } from "@/lib/auth";
 import { PageClient } from "./page-client";
 
@@ -9,5 +10,9 @@ export default async function PageView({
 	await requireAuth();
 	const { id } = await params;
 
-	return <PageClient id={id} />;
+	return (
+		<AppShell>
+			<PageClient id={id} />
+		</AppShell>
+	);
 }

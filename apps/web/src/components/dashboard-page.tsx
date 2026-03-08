@@ -1,6 +1,7 @@
 import { FileText, ScanSearch, ShieldEllipsis, Sparkles } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
@@ -41,21 +42,18 @@ const reviewQueue = [
 		title: "Incident playbook refresh",
 		path: "runbooks/operations/incident-playbook",
 		updatedAt: "8m ago",
-		updatedBy: "ops-agent-02",
 		source: "agent",
 	},
 	{
 		title: "MCP onboarding guidance",
 		path: "projects/platform/mcp-onboarding",
 		updatedAt: "21m ago",
-		updatedBy: "Dillmar",
 		source: "human",
 	},
 	{
 		title: "Search ranking notes",
 		path: "projects/product/search-ranking-notes",
 		updatedAt: "52m ago",
-		updatedBy: "research-agent",
 		source: "agent",
 	},
 ];
@@ -81,71 +79,81 @@ const activityFeed = [
 export function DashboardPage() {
 	return (
 		<div className="space-y-6">
-			{/* Metrics */}
-			<section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+			<header className="flex items-start justify-between gap-4 border-b border-[color:var(--border-subtle)] pb-5">
+				<div>
+					<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
+						Workspace / dashboard / today
+					</p>
+					<h2 className="mt-1 text-[20px] font-medium tracking-tight text-foreground">
+						Operational knowledge with human review built in.
+					</h2>
+					<p className="mt-1 text-[13px] text-muted-foreground">
+						A quiet overview of review workload, search coverage, and system
+						posture.
+					</p>
+				</div>
+				<div className="flex items-center gap-2">
+					<Button variant="ghost" size="sm">
+						Draft review
+					</Button>
+					<Button size="sm">Create page</Button>
+				</div>
+			</header>
+
+			<section className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
 				{metrics.map((item) => {
 					const Icon = item.icon;
 					return (
-						<div
-							key={item.label}
-							className="rounded-lg border border-[color:var(--border-subtle)] bg-[color:var(--surface-2)] p-4"
-						>
-							<div className="flex items-center justify-between gap-3">
-								<p className="text-sm text-[color:var(--text-secondary)]">
-									{item.label}
+						<Card key={item.label}>
+							<CardContent className="p-4">
+								<div className="flex items-center justify-between gap-3">
+									<p className="text-[13px] text-secondary">{item.label}</p>
+									<Icon className="size-4 text-[color:var(--text-muted)]" />
+								</div>
+								<p className="mt-2 text-[32px] font-medium tracking-tight text-foreground">
+									{item.value}
 								</p>
-								<Icon className="size-4 text-[color:var(--text-muted)]" />
-							</div>
-							<p className="mt-2 text-2xl font-medium tracking-tight text-[color:var(--text-primary)]">
-								{item.value}
-							</p>
-							<p className="mt-1 text-xs text-[color:var(--text-muted)]">
-								{item.detail}
-							</p>
-						</div>
+								<p className="mt-1 text-[12px] text-muted-foreground">
+									{item.detail}
+								</p>
+							</CardContent>
+						</Card>
 					);
 				})}
 			</section>
 
-			{/* Main Content */}
-			<section className="grid gap-4 xl:grid-cols-[1fr_380px]">
-				{/* Review Queue */}
+			<section className="grid gap-3 xl:grid-cols-[minmax(0,1fr)_340px]">
 				<Card>
 					<CardHeader className="pb-3">
-						<div className="flex items-center justify-between">
+						<div className="flex items-start justify-between gap-3">
 							<div>
-								<CardTitle className="text-base font-medium">
-									Review console
-								</CardTitle>
-								<CardDescription className="mt-0.5">
-									Draft-first workflows stay visible and attributable
+								<CardTitle>Review console</CardTitle>
+								<CardDescription>
+									Draft-first workflows stay visible and attributable.
 								</CardDescription>
 							</div>
 							<Badge variant="draft">3 pending</Badge>
 						</div>
 					</CardHeader>
-					<CardContent className="space-y-2">
+					<CardContent className="space-y-1">
 						{reviewQueue.map((item) => (
 							<div
 								key={item.title}
-								className="flex items-center justify-between gap-4 rounded-md p-2 hover:bg-[color:var(--surface-2)] transition-colors cursor-pointer"
+								className="flex items-center justify-between gap-4 rounded-md px-2 py-2 transition-colors hover:bg-surface-2"
 							>
 								<div className="min-w-0">
-									<p className="text-sm font-medium text-[color:var(--text-primary)] truncate">
+									<p className="truncate text-[13px] font-medium text-foreground">
 										{item.title}
 									</p>
-									<p className="text-xs text-[color:var(--text-muted)]">
+									<p className="truncate text-[12px] text-muted-foreground">
 										{item.path}
 									</p>
 								</div>
-								<div className="flex items-center gap-3 shrink-0">
-									<Badge
-										variant={item.source === "agent" ? "agent" : "human"}
-										className="text-[10px]"
-									>
+								<div className="flex items-center gap-2">
+									<Badge variant={item.source === "agent" ? "agent" : "human"}>
 										{item.source}
 									</Badge>
-									<span className="text-xs text-[color:var(--text-muted)]">
+									<span className="text-[11px] text-[color:var(--text-muted)]">
 										{item.updatedAt}
 									</span>
 								</div>
@@ -154,28 +162,21 @@ export function DashboardPage() {
 					</CardContent>
 				</Card>
 
-				{/* Activity */}
 				<Card>
 					<CardHeader className="pb-3">
-						<CardTitle className="text-base font-medium">
-							Recent activity
-						</CardTitle>
-						<CardDescription className="mt-0.5">
-							What changed in the workspace
-						</CardDescription>
+						<CardTitle>Recent activity</CardTitle>
+						<CardDescription>What changed in the workspace.</CardDescription>
 					</CardHeader>
 					<CardContent className="space-y-3">
 						{activityFeed.map((item) => (
-							<div key={item.title} className="space-y-0.5">
+							<div key={item.title} className="space-y-1">
 								<div className="flex items-start justify-between gap-3">
-									<p className="text-sm text-[color:var(--text-primary)]">
-										{item.title}
-									</p>
-									<span className="text-xs text-[color:var(--text-muted)] shrink-0">
+									<p className="text-[13px] text-foreground">{item.title}</p>
+									<span className="text-[11px] text-[color:var(--text-muted)]">
 										{item.when}
 									</span>
 								</div>
-								<p className="text-xs text-[color:var(--text-secondary)]">
+								<p className="text-[12px] text-muted-foreground">
 									{item.detail}
 								</p>
 							</div>

@@ -167,9 +167,9 @@ export function EditPageClient({ id }: { id: string }) {
 	}
 
 	return (
-		<div className="container mx-auto max-w-5xl py-8 flex flex-col gap-6">
+		<div className="mx-auto flex max-w-6xl flex-col gap-5">
 			{/* Header Section */}
-			<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+			<div className="flex flex-col justify-between gap-4 border-b border-[color:var(--border-subtle)] pb-5 sm:flex-row sm:items-center">
 				<div className="space-y-1">
 					<Breadcrumb>
 						<BreadcrumbList>
@@ -192,7 +192,9 @@ export function EditPageClient({ id }: { id: string }) {
 							</BreadcrumbItem>
 						</BreadcrumbList>
 					</Breadcrumb>
-					<h1 className="text-2xl font-bold tracking-tight">Edit Page</h1>
+					<h1 className="text-[20px] font-medium tracking-tight text-foreground">
+						Edit page
+					</h1>
 				</div>
 
 				<div className="flex items-center gap-2">
@@ -212,13 +214,13 @@ export function EditPageClient({ id }: { id: string }) {
 			</div>
 
 			{validationError && (
-				<div className="bg-destructive/10 text-destructive p-3 rounded-md text-sm">
+				<div className="rounded-md border border-destructive/20 bg-destructive/10 p-3 text-[13px] text-destructive">
 					{validationError}
 				</div>
 			)}
 
 			{/* Form Section */}
-			<div className="space-y-6">
+			<div className="space-y-5">
 				<div className="space-y-4">
 					<div className="space-y-2">
 						<Label htmlFor="title">
@@ -229,7 +231,7 @@ export function EditPageClient({ id }: { id: string }) {
 							value={title}
 							onChange={(e) => setTitle(e.target.value)}
 							placeholder="Page title"
-							className="text-lg font-medium"
+							className="text-[15px] font-medium"
 						/>
 					</div>
 
@@ -248,9 +250,9 @@ export function EditPageClient({ id }: { id: string }) {
 					<Label>Content</Label>
 					<Tabs
 						defaultValue="edit"
-						className="w-full border rounded-md overflow-hidden"
+						className="w-full overflow-hidden rounded-[10px] border border-[color:var(--border-subtle)]"
 					>
-						<div className="bg-muted/30 border-b px-4 py-2 flex items-center justify-between">
+						<div className="flex items-center justify-between border-b border-[color:var(--border-subtle)] bg-surface-2 px-4 py-2">
 							<TabsList className="h-9">
 								<TabsTrigger value="edit" className="text-xs">
 									<Edit2 className="h-3.5 w-3.5 mr-1.5" />
@@ -279,7 +281,7 @@ export function EditPageClient({ id }: { id: string }) {
 
 						<TabsContent
 							value="preview"
-							className="m-0 border-0 p-6 min-h-[400px] bg-background"
+							className="m-0 min-h-[400px] border-0 bg-background p-6"
 						>
 							{markdown ? (
 								<MarkdownPreview content={markdown} />

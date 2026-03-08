@@ -1,5 +1,8 @@
 import { headers } from "next/headers";
+
+import { AppShell } from "@/components/app-shell";
 import { requireAuth } from "@/lib/auth";
+
 import { DraftsClient } from "./drafts-client";
 
 export const metadata = {
@@ -10,7 +13,6 @@ export const metadata = {
 export default async function DraftsPage() {
 	await requireAuth();
 
-	// Fetch drafts
 	const headersList = await headers();
 	const host = headersList.get("host") || "localhost:3000";
 	const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
@@ -29,16 +31,21 @@ export default async function DraftsPage() {
 	const drafts = await res.json();
 
 	return (
-		<div className="flex-1 space-y-4 p-8 pt-6">
-			<div className="flex items-center justify-between space-y-2">
-				<h2 className="text-3xl font-bold tracking-tight">Drafts Queue</h2>
+		<AppShell>
+			<div className="space-y-5">
+				<header className="space-y-1 border-b border-[color:var(--border-subtle)] pb-5">
+					<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
+						Workspace / drafts
+					</p>
+					<h2 className="text-[20px] font-medium tracking-tight text-foreground">
+						Draft review queue
+					</h2>
+					<p className="text-[13px] text-muted-foreground">
+						Review and promote AI-generated or in-progress content.
+					</p>
+				</header>
+				<DraftsClient initialDrafts={drafts} />
 			</div>
-			<div className="hidden md:block">
-				<p className="text-muted-foreground">
-					Review and promote AI-generated or in-progress content.
-				</p>
-			</div>
-			<DraftsClient initialDrafts={drafts} />
-		</div>
+		</AppShell>
 	);
 }

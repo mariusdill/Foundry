@@ -1,7 +1,7 @@
 "use client";
 
 import { formatDistanceToNow } from "date-fns";
-import { AlertCircle, Eye, History, RotateCcw } from "lucide-react";
+import { AlertCircle, History, RotateCcw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -143,11 +143,8 @@ export function VersionList({ pageId, onRevert }: VersionListProps) {
 							</div>
 
 							<div className="flex items-center gap-2 self-start sm:self-auto">
-								<Button variant="outline" size="sm" className="h-8" asChild>
-									<a href={`/pages/${pageId}/versions/${version.id}`}>
-										<Eye className="h-4 w-4 mr-2" />
-										View
-									</a>
+								<Button variant="outline" size="sm" className="h-8" disabled>
+									Preview soon
 								</Button>
 
 								{onRevert && !isLatest && (

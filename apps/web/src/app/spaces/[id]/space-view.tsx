@@ -55,15 +55,15 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 		return matchesSearch && matchesStatus && matchesSource && matchesTag;
 	});
 	return (
-		<div className="flex h-[calc(100vh-4rem)] overflow-hidden bg-background">
+		<div className="flex min-h-[calc(100vh-8rem)] overflow-hidden rounded-[14px] border border-[color:var(--border-subtle)] bg-surface-1 shadow-[0_1px_0_rgba(255,255,255,0.02)]">
 			{/* Sidebar */}
 			<div
-				className={`border-r border-border transition-all duration-300 ease-in-out flex flex-col ${
+				className={`flex flex-col border-r border-[color:var(--border-subtle)] bg-[color:rgba(255,255,255,0.02)] transition-all duration-300 ease-in-out ${
 					sidebarOpen ? "w-64 opacity-100" : "w-0 opacity-0 overflow-hidden"
 				}`}
 			>
-				<div className="p-4 border-b border-border flex items-center justify-between">
-					<div className="flex items-center gap-2 font-semibold truncate">
+				<div className="flex items-center justify-between border-b border-[color:var(--border-subtle)] px-4 py-3.5">
+					<div className="flex items-center gap-2 truncate text-[13px] font-medium text-foreground">
 						<FolderGit2 className="h-4 w-4 shrink-0" />
 						<span className="truncate">{space.name}</span>
 					</div>
@@ -74,9 +74,9 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 			</div>
 
 			{/* Main Content */}
-			<div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+			<div className="flex min-w-0 flex-1 flex-col overflow-hidden">
 				{/* Header */}
-				<header className="h-14 border-b border-border flex items-center justify-between px-4 shrink-0">
+				<header className="flex h-14 shrink-0 items-center justify-between border-b border-[color:var(--border-subtle)] bg-[color:rgba(255,255,255,0.02)] px-4">
 					<div className="flex items-center gap-4">
 						<Button
 							variant="ghost"
@@ -91,7 +91,7 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 							)}
 						</Button>
 
-						<div className="flex items-center text-sm text-muted-foreground">
+						<div className="flex items-center text-[13px] text-muted-foreground">
 							<Link
 								href="/spaces"
 								className="hover:text-foreground transition-colors"
@@ -113,11 +113,22 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 
 				{/* Content Area */}
 				<main className="flex-1 overflow-y-auto p-6">
-					<div className="max-w-6xl mx-auto space-y-6">
-						<div className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center">
-							<h1 className="text-2xl font-bold tracking-tight">Pages</h1>
+					<div className="mx-auto max-w-6xl space-y-5">
+						<div className="flex flex-col items-start justify-between gap-4 border-b border-[color:var(--border-subtle)] pb-5 sm:flex-row sm:items-center">
+							<div>
+								<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
+									Space / {space.name}
+								</p>
+								<h1 className="mt-1 text-[20px] font-medium tracking-tight text-foreground">
+									Pages
+								</h1>
+								<p className="mt-2 max-w-2xl text-[13px] text-muted-foreground">
+									Browse and filter every page in this space, then jump straight
+									into review or editing.
+								</p>
+							</div>
 
-							<div className="flex items-center gap-2 w-full sm:w-auto">
+							<div className="flex w-full items-center gap-2 sm:w-auto">
 								<div className="relative w-full sm:w-64">
 									<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
 									<Input
@@ -128,7 +139,7 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 									/>
 								</div>
 								<Select value={statusFilter} onValueChange={setStatusFilter}>
-									<SelectTrigger className="w-[130px]">
+									<SelectTrigger className="w-[130px] bg-surface-2">
 										<SelectValue placeholder="Status" />
 									</SelectTrigger>
 									<SelectContent>
@@ -140,7 +151,7 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 								</Select>
 
 								<Select value={sourceFilter} onValueChange={setSourceFilter}>
-									<SelectTrigger className="w-[130px]">
+									<SelectTrigger className="w-[130px] bg-surface-2">
 										<SelectValue placeholder="Source" />
 									</SelectTrigger>
 									<SelectContent>
@@ -151,7 +162,7 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 								</Select>
 
 								<Select value={tagsFilter} onValueChange={setTagsFilter}>
-									<SelectTrigger className="w-[130px]">
+									<SelectTrigger className="w-[130px] bg-surface-2">
 										<SelectValue placeholder="Tags" />
 									</SelectTrigger>
 									<SelectContent>
@@ -168,7 +179,7 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 							</div>
 						</div>
 
-						<PageList pages={filteredPages} spaceId={space.id} />
+						<PageList pages={filteredPages} />
 					</div>
 				</main>
 			</div>

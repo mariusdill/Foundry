@@ -1,3 +1,4 @@
+import { AppShell } from "@/components/app-shell";
 import { requireAuth } from "@/lib/auth";
 import { EditPageClient } from "./edit-page-client";
 
@@ -9,5 +10,9 @@ export default async function EditPage({
 	await requireAuth();
 	const { id } = await params;
 
-	return <EditPageClient id={id} />;
+	return (
+		<AppShell>
+			<EditPageClient id={id} />
+		</AppShell>
+	);
 }

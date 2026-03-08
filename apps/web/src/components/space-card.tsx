@@ -29,7 +29,7 @@ export function SpaceCard({ space, viewMode }: SpaceCardProps) {
 
 	if (viewMode === "list") {
 		return (
-			<Link href={`/spaces/${space.slug}`}>
+			<Link href={`/spaces/${space.id}`}>
 				<Card className="hover:bg-muted/50 transition-colors flex items-center p-4 gap-4">
 					<div className="p-2 bg-primary/10 rounded-md">
 						<Icon className="w-6 h-6 text-primary" />
@@ -59,7 +59,7 @@ export function SpaceCard({ space, viewMode }: SpaceCardProps) {
 	}
 
 	return (
-		<Link href={`/spaces/${space.slug}`}>
+		<Link href={`/spaces/${space.id}`}>
 			<Card className="hover:bg-muted/50 transition-colors h-full flex flex-col">
 				<CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
 					<div className="p-2 bg-primary/10 rounded-md">

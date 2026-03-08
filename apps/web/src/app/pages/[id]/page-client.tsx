@@ -15,6 +15,7 @@ import {
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { useEffect, useState } from "react";
+import { MarkdownPreview } from "@/components/markdown-preview";
 import { Badge } from "@/components/ui/badge";
 import {
 	Breadcrumb,
@@ -35,8 +36,11 @@ import {
 import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
-import { MarkdownPreview } from "@/components/markdown-preview";
+import {
+	Tooltip,
+	TooltipContent,
+	TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 type PageData = {
 	id: string;
@@ -129,11 +133,11 @@ export function PageClient({ id }: { id: string }) {
 	}
 
 	return (
-		<div className="container mx-auto max-w-5xl py-8 flex flex-col lg:flex-row gap-8">
+		<div className="mx-auto flex max-w-6xl flex-col gap-6 lg:flex-row">
 			{/* Main Content Area */}
-			<div className="flex-1 space-y-8 min-w-0">
+			<div className="min-w-0 flex-1 space-y-6">
 				{/* Header Section */}
-				<div className="space-y-4">
+				<div className="space-y-3 border-b border-[color:var(--border-subtle)] pb-5">
 					<Breadcrumb>
 						<BreadcrumbList>
 							<BreadcrumbItem>
@@ -151,7 +155,7 @@ export function PageClient({ id }: { id: string }) {
 					</Breadcrumb>
 
 					<div className="flex items-start justify-between gap-4">
-						<h1 className="text-4xl font-bold tracking-tight break-words">
+						<h1 className="break-words text-[28px] font-medium tracking-tight text-foreground">
 							{page.title}
 						</h1>
 
@@ -192,12 +196,6 @@ export function PageClient({ id }: { id: string }) {
 									</Button>
 								</DropdownMenuTrigger>
 								<DropdownMenuContent align="end">
-									<DropdownMenuItem asChild>
-										<Link href={`/pages/${id}/history`}>
-											<Clock className="h-4 w-4 mr-2" />
-											History
-										</Link>
-									</DropdownMenuItem>
 									{page.status === "draft" && (
 										<DropdownMenuItem>
 											<Upload className="h-4 w-4 mr-2" />
@@ -219,22 +217,32 @@ export function PageClient({ id }: { id: string }) {
 					</div>
 
 					<div className="flex flex-wrap items-center gap-2">
-						<Badge variant={page.status === "stable" ? "default" : "secondary"}>
+						<Badge
+							variant={
+								page.status === "draft"
+									? "draft"
+									: page.status === "stable"
+										? "stable"
+										: "archived"
+							}
+						>
 							{page.status}
 						</Badge>
-						<Badge variant="outline" className="capitalize">
+						<Badge
+							variant={page.source === "agent" ? "agent" : "human"}
+							className="capitalize"
+						>
 							{page.source}
 						</Badge>
 						{page.tags?.map((tag) => (
-							<Badge key={tag} variant="outline" className="bg-muted/50">
+							<Badge key={tag} variant="outline">
 								#{tag}
 							</Badge>
 						))}
 					</div>
 				</div>
 
-				{/* Metadata Row */}
-				<div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg border">
+				<div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-[10px] border border-[color:var(--border-subtle)] bg-surface-2 px-4 py-3 text-[13px] text-muted-foreground">
 					<div className="flex items-center gap-1.5">
 						<Clock className="h-4 w-4" />
 						<span>
@@ -269,7 +277,7 @@ export function PageClient({ id }: { id: string }) {
 			</div>
 
 			{/* Right Rail (Optional for v1) */}
-			<div className="w-full lg:w-72 shrink-0 space-y-6">
+			<div className="w-full shrink-0 space-y-4 lg:w-72">
 				<Tabs defaultValue="history" className="w-full">
 					<TabsList className="w-full grid grid-cols-3">
 						<TabsTrigger value="history">History</TabsTrigger>
@@ -278,19 +286,19 @@ export function PageClient({ id }: { id: string }) {
 					</TabsList>
 					<TabsContent
 						value="history"
-						className="p-4 border rounded-md mt-2 bg-muted/10 text-sm text-muted-foreground text-center"
+						className="mt-2 rounded-md border border-[color:var(--border-subtle)] bg-surface-2 p-4 text-center text-[13px] text-muted-foreground"
 					>
 						History placeholder
 					</TabsContent>
 					<TabsContent
 						value="audit"
-						className="p-4 border rounded-md mt-2 bg-muted/10 text-sm text-muted-foreground text-center"
+						className="mt-2 rounded-md border border-[color:var(--border-subtle)] bg-surface-2 p-4 text-center text-[13px] text-muted-foreground"
 					>
 						Audit placeholder
 					</TabsContent>
 					<TabsContent
 						value="files"
-						className="p-4 border rounded-md mt-2 bg-muted/10 text-sm text-muted-foreground text-center"
+						className="mt-2 rounded-md border border-[color:var(--border-subtle)] bg-surface-2 p-4 text-center text-[13px] text-muted-foreground"
 					>
 						Attachments placeholder
 					</TabsContent>

@@ -9,6 +9,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -22,7 +23,6 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { useDebounce } from "@/hooks/use-debounce";
 
-// Types
 type PageResult = {
 	id: string;
 	title: string;
@@ -48,7 +48,6 @@ export function SearchClient() {
 	const [status, setStatus] = useState("all");
 	const [source, setSource] = useState("all");
 	const [sort, setSort] = useState("relevance");
-
 	const [results, setResults] = useState<PageResult[]>([]);
 	const [spaces, setSpaces] = useState<Space[]>([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -57,7 +56,6 @@ export function SearchClient() {
 	const inputRef = useRef<HTMLInputElement>(null);
 	const debouncedQuery = useDebounce(query, 300);
 
-	// Fetch spaces for filter
 	useEffect(() => {
 		fetch("/api/spaces")
 			.then((res) => res.json())
@@ -65,23 +63,23 @@ export function SearchClient() {
 			.catch((err) => console.error("Failed to fetch spaces", err));
 	}, []);
 
-	// Keyboard shortcuts
 	useEffect(() => {
-		const handleKeyDown = (e: KeyboardEvent) => {
-			if ((e.metaKey || e.ctrlKey) && e.key === "k") {
-				e.preventDefault();
+		const handleKeyDown = (event: KeyboardEvent) => {
+			if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+				event.preventDefault();
 				inputRef.current?.focus();
 			}
-			if (e.key === "Escape") {
+
+			if (event.key === "Escape") {
 				setQuery("");
 				inputRef.current?.blur();
 			}
 		};
+
 		window.addEventListener("keydown", handleKeyDown);
 		return () => window.removeEventListener("keydown", handleKeyDown);
 	}, []);
 
-	// Search effect
 	useEffect(() => {
 		const performSearch = async () => {
 			if (
@@ -107,13 +105,13 @@ export function SearchClient() {
 				params.append("sort", sort);
 
 				const res = await fetch(`/api/pages/search?${params.toString()}`);
-				if (res.ok) {
-					const data = await res.json();
-					setResults(data);
-				} else {
-					console.error("Search failed");
+				if (!res.ok) {
 					setResults([]);
+					return;
 				}
+
+				const data = await res.json();
+				setResults(data);
 			} catch (error) {
 				console.error("Search error:", error);
 				setResults([]);
@@ -125,23 +123,22 @@ export function SearchClient() {
 		performSearch();
 	}, [debouncedQuery, space, status, source, sort]);
 
-	// Highlight text helper
 	const highlightText = useCallback((text: string, highlight: string) => {
 		if (!highlight.trim()) return <span>{text}</span>;
 
 		const parts = text.split(new RegExp(`(${highlight})`, "gi"));
 		return (
 			<span>
-				{parts.map((part, i) =>
+				{parts.map((part, index) =>
 					part.toLowerCase() === highlight.toLowerCase() ? (
 						<span
-							key={i}
-							className="bg-primary/20 text-primary font-medium rounded-sm px-0.5"
+							key={`${part}-${index}`}
+							className="rounded-sm bg-primary/12 px-0.5 text-foreground"
 						>
 							{part}
 						</span>
 					) : (
-						<span key={i}>{part}</span>
+						<span key={`${part}-${index}`}>{part}</span>
 					),
 				)}
 			</span>
@@ -149,56 +146,67 @@ export function SearchClient() {
 	}, []);
 
 	return (
-		<div className="space-y-6">
-			{/* Search Header */}
-			<div className="flex flex-col gap-4">
+		<div className="space-y-5">
+			<header className="space-y-1 border-b border-[color:var(--border-subtle)] pb-5">
+				<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
+					Workspace / search
+				</p>
+				<h2 className="text-[20px] font-medium tracking-tight text-foreground">
+					Search pages, drafts, and knowledge
+				</h2>
+				<p className="text-[13px] text-muted-foreground">
+					Fast retrieval across titles, content, tags, and paths.
+				</p>
+			</header>
+
+			<div className="space-y-3">
 				<div className="relative">
-					<Search className="absolute left-4 top-1/2 -translate-y-1/2 size-5 text-muted-foreground" />
+					<Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
 					<Input
 						ref={inputRef}
 						value={query}
-						onChange={(e) => setQuery(e.target.value)}
+						onChange={(event) => setQuery(event.target.value)}
 						placeholder="Search pages, drafts, and knowledge..."
-						className="h-14 pl-12 pr-24 text-lg rounded-2xl bg-background/50 border-border/50 focus-visible:ring-primary/20"
+						className="h-11 pl-9 pr-24 text-[14px]"
 					/>
-					<div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2">
-						{query && (
+					<div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-2">
+						{query ? (
 							<button
 								onClick={() => setQuery("")}
-								className="p-1 hover:bg-muted rounded-md text-muted-foreground transition-colors"
+								className="rounded-sm p-1 text-muted-foreground transition-colors hover:bg-accent hover:text-foreground"
+								type="button"
 							>
-								<X className="size-4" />
+								<X className="size-3.5" />
 							</button>
-						)}
-						<div className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md bg-muted/50 text-xs text-muted-foreground font-medium border border-border/50">
+						) : null}
+						<div className="hidden items-center gap-1 rounded-sm border border-border bg-surface-2 px-2 py-1 text-[11px] text-muted-foreground sm:flex">
 							<CommandIcon className="size-3" />
 							<span>K</span>
 						</div>
 					</div>
 				</div>
 
-				{/* Filters */}
-				<div className="flex flex-wrap items-center gap-3">
+				<div className="flex flex-wrap items-center gap-2">
 					<Select value={space} onValueChange={setSpace}>
-						<SelectTrigger className="w-[160px] h-9 rounded-xl bg-background/50">
-							<SelectValue placeholder="All Spaces" />
+						<SelectTrigger className="w-[160px]">
+							<SelectValue placeholder="All spaces" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="all">All Spaces</SelectItem>
-							{spaces.map((s) => (
-								<SelectItem key={s.id} value={s.slug}>
-									{s.name}
+							<SelectItem value="all">All spaces</SelectItem>
+							{spaces.map((item) => (
+								<SelectItem key={item.id} value={item.slug}>
+									{item.name}
 								</SelectItem>
 							))}
 						</SelectContent>
 					</Select>
 
 					<Select value={status} onValueChange={setStatus}>
-						<SelectTrigger className="w-[140px] h-9 rounded-xl bg-background/50">
-							<SelectValue placeholder="Any Status" />
+						<SelectTrigger className="w-[132px]">
+							<SelectValue placeholder="Status" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="all">Any Status</SelectItem>
+							<SelectItem value="all">Any status</SelectItem>
 							<SelectItem value="draft">Draft</SelectItem>
 							<SelectItem value="stable">Stable</SelectItem>
 							<SelectItem value="archived">Archived</SelectItem>
@@ -206,127 +214,101 @@ export function SearchClient() {
 					</Select>
 
 					<Select value={source} onValueChange={setSource}>
-						<SelectTrigger className="w-[140px] h-9 rounded-xl bg-background/50">
-							<SelectValue placeholder="Any Source" />
+						<SelectTrigger className="w-[132px]">
+							<SelectValue placeholder="Source" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="all">Any Source</SelectItem>
+							<SelectItem value="all">Any source</SelectItem>
 							<SelectItem value="human">Human</SelectItem>
 							<SelectItem value="agent">Agent</SelectItem>
 						</SelectContent>
 					</Select>
 
 					<Select value={sort} onValueChange={setSort}>
-						<SelectTrigger className="w-[140px] h-9 rounded-xl bg-background/50 ml-auto">
-							<SelectValue placeholder="Sort by" />
+						<SelectTrigger className="ml-auto w-[156px]">
+							<SelectValue placeholder="Sort" />
 						</SelectTrigger>
 						<SelectContent>
 							<SelectItem value="relevance">Relevance</SelectItem>
-							<SelectItem value="updatedAt">Recently Updated</SelectItem>
+							<SelectItem value="updatedAt">Recently updated</SelectItem>
 						</SelectContent>
 					</Select>
 				</div>
 			</div>
 
-			{/* Results */}
-			<div className="space-y-4">
+			<div className="space-y-3">
 				{isLoading ? (
-					Array.from({ length: 3 }).map((_, i) => (
-						<Card key={i} className="bg-background/40 border-border/50">
-							<CardContent className="p-5 space-y-3">
-								<div className="flex items-center gap-3">
-									<Skeleton className="h-5 w-1/3" />
-									<Skeleton className="h-5 w-16 rounded-full" />
-								</div>
+					Array.from({ length: 3 }).map((_, index) => (
+						<Card key={`skeleton-${index}`}>
+							<CardContent className="space-y-3 p-4">
+								<Skeleton className="h-4 w-1/3" />
 								<Skeleton className="h-4 w-full" />
 								<Skeleton className="h-4 w-2/3" />
-								<div className="flex items-center gap-4 pt-2">
-									<Skeleton className="h-4 w-24" />
-									<Skeleton className="h-4 w-32" />
-								</div>
 							</CardContent>
 						</Card>
 					))
 				) : hasSearched && results.length === 0 ? (
-					<div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-border/50 rounded-3xl bg-background/20">
-						<div className="size-12 rounded-2xl bg-muted/50 flex items-center justify-center mb-4">
-							<Search className="size-6 text-muted-foreground" />
-						</div>
-						<h3 className="text-lg font-medium text-foreground">
-							No results found
-						</h3>
-						<p className="text-sm text-muted-foreground mt-1 max-w-sm">
-							We couldn&apos;t find any pages matching your search. Try adjusting
-							your filters or search terms.
-						</p>
-					</div>
+					<Card>
+						<CardContent className="flex flex-col items-center justify-center py-16 text-center">
+							<div className="mb-4 flex size-10 items-center justify-center rounded-md bg-surface-2 text-muted-foreground">
+								<Search className="size-4" />
+							</div>
+							<p className="text-[15px] font-medium text-foreground">
+								No results found
+							</p>
+							<p className="mt-1 max-w-sm text-[13px] text-muted-foreground">
+								Try adjusting your query or filters.
+							</p>
+						</CardContent>
+					</Card>
 				) : (
 					results.map((result) => (
-						<Link
-							key={result.id}
-							href={`/spaces/${result.space.slug}/${result.slug}`}
-							className="block mb-3"
-						>
-							<Card className="group bg-background/40 border-border/50 hover:bg-muted/20 hover:border-border transition-all duration-200">
-								<CardContent className="p-5">
+						<Link key={result.id} href={`/pages/${result.id}`}>
+							<Card className="transition-colors hover:bg-surface-2">
+								<CardContent className="space-y-3 p-4">
 									<div className="flex items-start justify-between gap-4">
-										<div className="space-y-1.5 flex-1">
-											<div className="flex items-center gap-2 flex-wrap">
-												<h3 className="text-base font-medium text-foreground group-hover:text-primary transition-colors">
+										<div className="min-w-0 space-y-1.5">
+											<div className="flex flex-wrap items-center gap-2">
+												<h3 className="text-[15px] font-medium text-foreground">
 													{highlightText(result.title, debouncedQuery)}
 												</h3>
 												<Badge
-													variant={result.status as "draft" | "stable" | "archived"}
-													className="capitalize text-[10px] h-5 px-1.5"
+													variant={
+														result.status as "draft" | "stable" | "archived"
+													}
 												>
 													{result.status}
 												</Badge>
-												{result.source === "agent" && (
-													<Badge
-														variant="agent"
-														className="capitalize text-[10px] h-5 px-1.5"
-													>
-														Agent
-													</Badge>
-												)}
+												{result.source === "agent" ? (
+													<Badge variant="agent">agent</Badge>
+												) : null}
 											</div>
 
-											{result.excerpt && (
-												<p className="text-sm text-muted-foreground line-clamp-2 leading-relaxed">
+											{result.excerpt ? (
+												<p className="line-clamp-2 text-[13px] leading-5 text-secondary">
 													{highlightText(result.excerpt, debouncedQuery)}
 												</p>
-											)}
-
-											<div className="flex items-center gap-4 pt-2 text-xs text-muted-foreground">
-												<div className="flex items-center gap-1.5">
-													<FileText className="size-3.5" />
-													<span>{result.space.name}</span>
-												</div>
-												<div className="flex items-center gap-1.5">
-													<Clock className="size-3.5" />
-													<span>
-														{new Date(result.updatedAt).toLocaleDateString()}
-													</span>
-												</div>
-												{result.tags && result.tags.length > 0 && (
-													<div className="flex items-center gap-1.5">
-														{result.tags.slice(0, 3).map((tag) => (
-															<span
-																key={tag}
-																className="px-1.5 py-0.5 rounded-md bg-muted/50 border border-border/50"
-															>
-																#{tag}
-															</span>
-														))}
-														{result.tags.length > 3 && (
-															<span className="text-[10px]">
-																+{result.tags.length - 3}
-															</span>
-														)}
-													</div>
-												)}
-											</div>
+											) : null}
 										</div>
+									</div>
+
+									<div className="flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
+										<span className="flex items-center gap-1.5">
+											<FileText className="size-3.5" />
+											{result.space.name}
+										</span>
+										<span className="flex items-center gap-1.5">
+											<Clock className="size-3.5" />
+											{new Date(result.updatedAt).toLocaleDateString()}
+										</span>
+										{result.tags?.slice(0, 3).map((tag) => (
+											<span
+												key={tag}
+												className="rounded-sm bg-surface-2 px-1.5 py-0.5 text-[11px]"
+											>
+												#{tag}
+											</span>
+										))}
 									</div>
 								</CardContent>
 							</Card>

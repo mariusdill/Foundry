@@ -35,28 +35,41 @@ type PageWithUser = Page & { updatedBy: User | null };
 
 interface PageListProps {
 	pages: PageWithUser[];
-	spaceId: string;
 }
 
-export function PageList({ pages, spaceId }: PageListProps) {
+export function PageList({ pages }: PageListProps) {
 	const [sortConfig, setSortConfig] = useState<{
 		key: keyof PageWithUser | "updatedBy";
 		direction: "asc" | "desc";
 	} | null>(null);
 
+	const getComparableValue = (
+		page: PageWithUser,
+		key: keyof PageWithUser | "updatedBy",
+	): string | number | boolean => {
+		if (key === "updatedBy") {
+			return page.updatedBy?.name || page.updatedBy?.email || "";
+		}
+
+		const value = page[key];
+
+		if (Array.isArray(value)) {
+			return value.join(", ");
+		}
+
+		if (value instanceof Date) {
+			return value.getTime();
+		}
+
+		return value ?? "";
+	};
+
 	const sortedPages = [...pages].sort((a, b) => {
 		if (!sortConfig) return 0;
 
 		const { key, direction } = sortConfig;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let aValue: any = a[key as keyof PageWithUser];
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		let bValue: any = b[key as keyof PageWithUser];
-
-		if (key === "updatedBy") {
-			aValue = a.updatedBy?.name || a.updatedBy?.email || "";
-			bValue = b.updatedBy?.name || b.updatedBy?.email || "";
-		}
+		const aValue = getComparableValue(a, key);
+		const bValue = getComparableValue(b, key);
 
 		if (aValue < bValue) return direction === "asc" ? -1 : 1;
 		if (aValue > bValue) return direction === "asc" ? 1 : -1;
@@ -94,12 +107,37 @@ export function PageList({ pages, spaceId }: PageListProps) {
 			<Table>
 				<TableHeader>
 					<TableRow>
-						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("title")}>Title</TableHead>
-						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("path")}>Path</TableHead>
+						<TableHead
+							className="cursor-pointer hover:bg-muted/50"
+							onClick={() => requestSort("title")}
+						>
+							Title
+						</TableHead>
+						<TableHead
+							className="cursor-pointer hover:bg-muted/50"
+							onClick={() => requestSort("path")}
+						>
+							Path
+						</TableHead>
 						<TableHead>Tags</TableHead>
-						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("status")}>Status</TableHead>
-						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("source")}>Source</TableHead>
-						<TableHead className="cursor-pointer hover:bg-muted/50" onClick={() => requestSort("updatedAt")}>Updated</TableHead>
+						<TableHead
+							className="cursor-pointer hover:bg-muted/50"
+							onClick={() => requestSort("status")}
+						>
+							Status
+						</TableHead>
+						<TableHead
+							className="cursor-pointer hover:bg-muted/50"
+							onClick={() => requestSort("source")}
+						>
+							Source
+						</TableHead>
+						<TableHead
+							className="cursor-pointer hover:bg-muted/50"
+							onClick={() => requestSort("updatedAt")}
+						>
+							Updated
+						</TableHead>
 						<TableHead className="w-[50px]"></TableHead>
 					</TableRow>
 				</TableHeader>
@@ -108,7 +146,7 @@ export function PageList({ pages, spaceId }: PageListProps) {
 						<TableRow key={page.id} className="group">
 							<TableCell className="font-medium">
 								<Link
-									href={`/spaces/${spaceId}/pages/${page.id}`}
+									href={`/pages/${page.id}`}
 									className="hover:underline flex items-center gap-2"
 								>
 									{page.pinned && (
@@ -123,7 +161,11 @@ export function PageList({ pages, spaceId }: PageListProps) {
 							<TableCell>
 								<div className="flex flex-wrap gap-1">
 									{page.tags?.map((tag) => (
-										<Badge key={tag} variant="outline" className="text-xs font-normal">
+										<Badge
+											key={tag}
+											variant="outline"
+											className="text-xs font-normal"
+										>
 											{tag}
 										</Badge>
 									))}
@@ -183,9 +225,7 @@ export function PageList({ pages, spaceId }: PageListProps) {
 									<DropdownMenuContent align="end">
 										<DropdownMenuLabel>Actions</DropdownMenuLabel>
 										<DropdownMenuItem asChild>
-											<Link href={`/spaces/${spaceId}/pages/${page.id}`}>
-												View Page
-											</Link>
+											<Link href={`/pages/${page.id}`}>View Page</Link>
 										</DropdownMenuItem>
 										<DropdownMenuSeparator />
 										<DropdownMenuItem>

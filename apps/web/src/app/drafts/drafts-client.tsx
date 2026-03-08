@@ -6,8 +6,6 @@ import {
 	Archive,
 	Bot,
 	CheckCircle,
-	FileEdit,
-	MoreHorizontal,
 	Search,
 	User as UserIcon,
 } from "lucide-react";
@@ -16,15 +14,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
 	Select,
@@ -33,14 +25,6 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import {
-	Table,
-	TableBody,
-	TableCell,
-	TableHead,
-	TableHeader,
-	TableRow,
-} from "@/components/ui/table";
 
 type DraftWithRelations = Page & {
 	updatedBy: User | null;
@@ -60,9 +44,10 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 	);
 	const [spaceFilter, setSpaceFilter] = useState<string>("all");
 
-	// Extract unique spaces for the filter
 	const spaces = Array.from(
-		new Map(initialDrafts.map((d) => [d.spaceId, d.space])).values(),
+		new Map(
+			initialDrafts.map((draft) => [draft.spaceId, draft.space]),
+		).values(),
 	);
 
 	const filteredDrafts = drafts.filter((draft) => {
@@ -87,7 +72,7 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 			if (!res.ok) throw new Error("Failed to promote draft");
 
 			toast.success("Draft promoted to stable");
-			setDrafts(drafts.filter((d) => d.id !== draftId));
+			setDrafts(drafts.filter((draft) => draft.id !== draftId));
 			router.refresh();
 		} catch (error) {
 			toast.error("Failed to promote draft");
@@ -106,7 +91,7 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 			if (!res.ok) throw new Error("Failed to archive draft");
 
 			toast.success("Draft archived");
-			setDrafts(drafts.filter((d) => d.id !== draftId));
+			setDrafts(drafts.filter((draft) => draft.id !== draftId));
 			router.refresh();
 		} catch (error) {
 			toast.error("Failed to archive draft");
@@ -116,37 +101,40 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 
 	return (
 		<div className="space-y-4">
-			<div className="flex flex-col sm:flex-row gap-4">
+			<div className="flex flex-col gap-3 sm:flex-row sm:items-center">
 				<div className="relative flex-1">
-					<Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+					<Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
 					<Input
 						placeholder="Search drafts..."
-						className="pl-8"
+						className="pl-9"
 						value={searchQuery}
-						onChange={(e) => setSearchQuery(e.target.value)}
+						onChange={(event) => setSearchQuery(event.target.value)}
 					/>
 				</div>
-				<div className="flex gap-2">
+
+				<div className="flex flex-wrap gap-2">
 					<Select
 						value={sourceFilter}
-						onValueChange={(v: "all" | "human" | "agent") => setSourceFilter(v)}
+						onValueChange={(value: "all" | "human" | "agent") =>
+							setSourceFilter(value)
+						}
 					>
-						<SelectTrigger className="w-[140px]">
+						<SelectTrigger className="w-[142px]">
 							<SelectValue placeholder="Source" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="all">All Sources</SelectItem>
+							<SelectItem value="all">All sources</SelectItem>
 							<SelectItem value="human">Human</SelectItem>
 							<SelectItem value="agent">Agent</SelectItem>
 						</SelectContent>
 					</Select>
 
 					<Select value={spaceFilter} onValueChange={setSpaceFilter}>
-						<SelectTrigger className="w-[160px]">
+						<SelectTrigger className="w-[168px]">
 							<SelectValue placeholder="Space" />
 						</SelectTrigger>
 						<SelectContent>
-							<SelectItem value="all">All Spaces</SelectItem>
+							<SelectItem value="all">All spaces</SelectItem>
 							{spaces.map((space) => (
 								<SelectItem key={space.id} value={space.id}>
 									{space.name}
@@ -158,122 +146,94 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 			</div>
 
 			{filteredDrafts.length === 0 ? (
-				<div className="flex flex-col items-center justify-center py-12 text-center border rounded-lg border-dashed">
-					<div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-4">
-						<FileEdit className="h-6 w-6 text-muted-foreground" />
-					</div>
-					<h3 className="text-lg font-medium">No drafts awaiting review</h3>
-					<p className="text-sm text-muted-foreground mt-1 max-w-sm mb-4">
-						{initialDrafts.length === 0
-							? "There are currently no drafts in the system."
-							: "No drafts match your current filters."}
-					</p>
-					{initialDrafts.length === 0 && (
-						<Button asChild>
-							<Link href="/spaces">Go to Spaces</Link>
-						</Button>
-					)}
-				</div>
+				<Card>
+					<CardContent className="flex flex-col items-center justify-center py-14 text-center">
+						<div className="mb-4 flex size-10 items-center justify-center rounded-md bg-surface-2 text-muted-foreground">
+							<Bot className="size-4" />
+						</div>
+						<p className="text-[15px] font-medium text-foreground">
+							No drafts awaiting review
+						</p>
+						<p className="mt-1 max-w-sm text-[13px] text-muted-foreground">
+							{initialDrafts.length === 0
+								? "There are currently no drafts in the workspace."
+								: "No drafts match your current filters."}
+						</p>
+						{initialDrafts.length === 0 ? (
+							<Button asChild className="mt-5">
+								<Link href="/spaces">Browse spaces</Link>
+							</Button>
+						) : null}
+					</CardContent>
+				</Card>
 			) : (
-				<div className="rounded-md border">
-					<Table>
-						<TableHeader>
-							<TableRow>
-								<TableHead>Title</TableHead>
-								<TableHead>Space / Path</TableHead>
-								<TableHead>Source</TableHead>
-								<TableHead>Updated</TableHead>
-								<TableHead className="w-[50px]"></TableHead>
-							</TableRow>
-						</TableHeader>
-						<TableBody>
-							{filteredDrafts.map((draft) => (
-								<TableRow key={draft.id} className="group">
-									<TableCell className="font-medium">
+				<div className="space-y-3">
+					{filteredDrafts.map((draft) => (
+						<Card key={draft.id}>
+							<CardContent className="flex items-start justify-between gap-4 p-4">
+								<div className="min-w-0 space-y-2">
+									<div className="flex flex-wrap items-center gap-2">
 										<Link
-											href={`/spaces/${draft.spaceId}/pages/${draft.id}`}
-											className="hover:underline flex items-center gap-2"
+											href={`/pages/${draft.id}`}
+											className="text-[15px] font-medium text-foreground hover:underline"
 										>
 											{draft.title}
 										</Link>
-									</TableCell>
-									<TableCell className="text-muted-foreground text-sm">
-										<div className="flex flex-col">
-											<span className="font-medium text-foreground">
-												{draft.space.name}
-											</span>
-											<span>{draft.path}</span>
-										</div>
-									</TableCell>
-									<TableCell>
-										<div className="flex items-center gap-1.5 text-sm text-muted-foreground">
+										<Badge
+											variant={draft.source === "agent" ? "agent" : "human"}
+										>
+											{draft.source === "agent" ? "agent" : "human"}
+										</Badge>
+										<Badge variant="draft">draft</Badge>
+									</div>
+
+									<p className="text-[13px] text-muted-foreground">
+										{draft.space.name} / {draft.path}
+									</p>
+
+									<div className="flex flex-wrap items-center gap-3 text-[12px] text-muted-foreground">
+										<span className="flex items-center gap-1.5">
 											{draft.source === "agent" ? (
-												<>
-													<Bot className="h-3.5 w-3.5" /> Agent
-												</>
+												<Bot className="size-3.5" />
 											) : (
-												<>
-													<UserIcon className="h-3.5 w-3.5" /> Human
-												</>
+												<UserIcon className="size-3.5" />
 											)}
-										</div>
-									</TableCell>
-									<TableCell className="text-sm text-muted-foreground">
-										<div className="flex flex-col">
-											<span>
-												{formatDistanceToNow(new Date(draft.updatedAt), {
-													addSuffix: true,
-												})}
-											</span>
-											{draft.updatedBy && (
-												<span className="text-xs opacity-70">
-													by {draft.updatedBy.name || draft.updatedBy.email}
-												</span>
-											)}
-										</div>
-									</TableCell>
-									<TableCell>
-										<DropdownMenu>
-											<DropdownMenuTrigger asChild>
-												<Button
-													variant="ghost"
-													className="h-8 w-8 p-0 opacity-0 group-hover:opacity-100 transition-opacity"
-												>
-													<span className="sr-only">Open menu</span>
-													<MoreHorizontal className="h-4 w-4" />
-												</Button>
-											</DropdownMenuTrigger>
-											<DropdownMenuContent align="end">
-												<DropdownMenuLabel>Actions</DropdownMenuLabel>
-												<DropdownMenuItem asChild>
-													<Link
-														href={`/spaces/${draft.spaceId}/pages/${draft.id}`}
-													>
-														Review Draft
-													</Link>
-												</DropdownMenuItem>
-												<DropdownMenuSeparator />
-												<DropdownMenuItem
-													onClick={() => handlePromote(draft.id)}
-													className="text-green-600 focus:text-green-600"
-												>
-													<CheckCircle className="mr-2 h-4 w-4" />
-													Promote to Stable
-												</DropdownMenuItem>
-												<DropdownMenuItem
-													onClick={() => handleArchive(draft.id)}
-													className="text-destructive focus:text-destructive"
-												>
-													<Archive className="mr-2 h-4 w-4" />
-													Archive
-												</DropdownMenuItem>
-											</DropdownMenuContent>
-										</DropdownMenu>
-									</TableCell>
-								</TableRow>
-							))}
-						</TableBody>
-					</Table>
+											{draft.updatedBy?.name ||
+												draft.updatedBy?.email ||
+												"Unknown"}
+										</span>
+										<span>
+											{formatDistanceToNow(new Date(draft.updatedAt), {
+												addSuffix: true,
+											})}
+										</span>
+									</div>
+								</div>
+
+								<div className="flex shrink-0 items-center gap-2">
+									<Button variant="ghost" size="xs" asChild>
+										<Link href={`/pages/${draft.id}`}>Review</Link>
+									</Button>
+									<Button
+										variant="secondary"
+										size="xs"
+										onClick={() => handlePromote(draft.id)}
+									>
+										<CheckCircle className="size-3.5" />
+										Promote
+									</Button>
+									<Button
+										variant="ghost"
+										size="xs"
+										onClick={() => handleArchive(draft.id)}
+									>
+										<Archive className="size-3.5" />
+										Archive
+									</Button>
+								</div>
+							</CardContent>
+						</Card>
+					))}
 				</div>
 			)}
 		</div>
