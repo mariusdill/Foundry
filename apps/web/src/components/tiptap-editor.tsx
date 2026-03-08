@@ -1,9 +1,12 @@
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";
+import TaskItem from "@tiptap/extension-task-item";
+import TaskList from "@tiptap/extension-task-list";
 import { type Editor, EditorContent, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import {
 	Bold,
+	CheckSquare,
 	Code,
 	Heading1,
 	Heading2,
@@ -190,6 +193,18 @@ const MenuBar = ({ editor }: { editor: Editor | null }) => {
 			>
 				<ListOrdered className="h-4 w-4" />
 			</Button>
+			<Button
+				variant="ghost"
+				size="icon"
+				onClick={() => editor.chain().focus().toggleTaskList().run()}
+				className={cn(
+					"h-8 w-8",
+					editor.isActive("taskList") && "bg-muted text-foreground",
+				)}
+				title="Task List"
+			>
+				<CheckSquare className="h-4 w-4" />
+			</Button>
 
 			<Separator orientation="vertical" className="mx-1 h-6" />
 
@@ -275,6 +290,14 @@ export function TiptapEditor({
 				openOnClick: false,
 				autolink: true,
 			}),
+			TaskList.configure({
+				HTMLAttributes: {
+					class: "not-prose",
+				},
+			}),
+			TaskItem.configure({
+				nested: true,
+			}),
 			Markdown,
 		],
 		content,
@@ -286,7 +309,9 @@ export function TiptapEditor({
 		},
 		onUpdate: ({ editor }) => {
 			// Export as markdown
-			const markdown = (editor.storage as unknown as { markdown: { getMarkdown: () => string } }).markdown.getMarkdown();
+			const markdown = (
+				editor.storage as unknown as { markdown: { getMarkdown: () => string } }
+			).markdown.getMarkdown();
 			onChange(markdown);
 		},
 	});
