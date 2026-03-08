@@ -4,6 +4,8 @@ import type { Page, Space, User } from "@foundry/database";
 import {
 	ChevronRight,
 	FolderGit2,
+	Kanban,
+	List,
 	PanelLeftClose,
 	PanelLeftOpen,
 	Plus,
@@ -21,6 +23,7 @@ import {
 	SelectValue,
 } from "@/components/ui/select";
 import { CreatePageDialog } from "./create-page-dialog";
+import { KanbanView } from "./kanban-view";
 import { PageList } from "./page-list";
 import { PageTree } from "./page-tree";
 
@@ -37,6 +40,7 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 	const [statusFilter, setStatusFilter] = useState<string>("all");
 	const [sourceFilter, setSourceFilter] = useState<string>("all");
 	const [tagsFilter, setTagsFilter] = useState<string>("all");
+	const [viewMode, setViewMode] = useState<"list" | "board">("list");
 	const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 	const uniqueTags = Array.from(
 		new Set(initialPages.flatMap((page) => page.tags).filter(Boolean)),
@@ -54,6 +58,7 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 		const matchesTag = tagsFilter === "all" || page.tags.includes(tagsFilter);
 		return matchesSearch && matchesStatus && matchesSource && matchesTag;
 	});
+
 	return (
 		<div className="flex min-h-[calc(100vh-8rem)] overflow-hidden rounded-[14px] border border-[color:var(--border-subtle)] bg-surface-1 shadow-[0_1px_0_rgba(255,255,255,0.02)]">
 			{/* Sidebar */}
@@ -104,6 +109,26 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 					</div>
 
 					<div className="flex items-center gap-2">
+						<div className="flex items-center rounded-md border border-[color:var(--border-subtle)] bg-surface-2 p-1 mr-2">
+							<Button
+								variant={viewMode === "list" ? "secondary" : "ghost"}
+								size="icon-xs"
+								onClick={() => setViewMode("list")}
+								aria-label="Show list view"
+								aria-pressed={viewMode === "list"}
+							>
+								<List className="h-4 w-4" />
+							</Button>
+							<Button
+								variant={viewMode === "board" ? "secondary" : "ghost"}
+								size="icon-xs"
+								onClick={() => setViewMode("board")}
+								aria-label="Show board view"
+								aria-pressed={viewMode === "board"}
+							>
+								<Kanban className="h-4 w-4" />
+							</Button>
+						</div>
 						<Button onClick={() => setIsCreateDialogOpen(true)} size="sm">
 							<Plus className="h-4 w-4 mr-2" />
 							New Page
@@ -167,19 +192,21 @@ export function SpaceView({ space, initialPages }: SpaceViewProps) {
 									</SelectTrigger>
 									<SelectContent>
 										<SelectItem value="all">All Tags</SelectItem>
-										{uniqueTags.map((tag) => {
-											return (
-												<SelectItem key={tag} value={tag}>
-													{tag}
-												</SelectItem>
-											);
-										})}
+										{uniqueTags.map((tag) => (
+											<SelectItem key={tag} value={tag}>
+												{tag}
+											</SelectItem>
+										))}
 									</SelectContent>
 								</Select>
 							</div>
 						</div>
 
-						<PageList pages={filteredPages} />
+						{viewMode === "list" ? (
+							<PageList pages={filteredPages} />
+						) : (
+							<KanbanView pages={filteredPages} />
+						)}
 					</div>
 				</main>
 			</div>
