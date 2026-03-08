@@ -1,11 +1,8 @@
 {
-  "active_plan": "/home/dillmar/projects/Foundry/.sisyphus/plans/foundry-mvp-phase1-adjusted.md",
-  "started_at": "2026-03-06T11:52:16.530Z",
-  "session_ids": [
-    "ses_33d3a4895ffeWdoyYt5sD83jPn"
-  ],
-  "plan_name": "foundry-mvp-phase1-adjusted",
-  "agent": "atlas",
-  "worktree_path": "/home/dillmar/projects/Foundry"
-}
+	"active_plan": "/home/dillmar/projects/Foundry/.sisyphus/plans/foundry-premium-ui-refactor.md",
+	"started_at": "2026-03-08T17:24:17.766Z",
+	"session_ids": ["ses_331858b2bffe6pqCF12kF9B1Y2"],
+	"plan_name": "foundry-premium-ui-refactor",
+	"agent": "atlas",
+	"worktree_path": "/home/dillmar/projects/Foundry-premium-ui-refactor"
 }
