@@ -15,20 +15,20 @@ export async function GET(request: Request) {
 		const { searchParams } = new URL(request.url);
 		const spaceId = searchParams.get("spaceId");
 		const status = searchParams.get("status");
+		const limit = searchParams.get("limit");
 
 		const where: Record<string, string> = {};
 		if (spaceId) where.spaceId = spaceId;
 		if (status) where.status = status;
 
-
-
 		const pages = await prisma.page.findMany({
 			where,
 			orderBy: { updatedAt: "desc" },
 			include: { space: true },
+			...(limit ? { take: parseInt(limit, 10) } : {}),
 		});
 
-		return NextResponse.json(pages);
+		return NextResponse.json({ pages });
 	} catch (error) {
 		const authResponse = toAuthErrorResponse(error);
 		if (authResponse) {

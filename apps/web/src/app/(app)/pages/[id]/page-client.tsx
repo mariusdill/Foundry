@@ -14,7 +14,8 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { BacklinksSection } from "@/components/backlinks-section";
 import { MarkdownPreview } from "@/components/markdown-preview";
 import { PageChrome } from "@/components/page-chrome";
 import { Badge } from "@/components/ui/badge";
@@ -48,8 +49,20 @@ type PageData = {
 	markdown: string;
 };
 
+type Backlink = {
+	id: string;
+	title: string;
+	path: string;
+	status: string;
+	space: { name: string };
+};
+
 export function PageClient({ id }: { id: string }) {
 	const [page, setPage] = useState<PageData | null>(null);
+	const [backlinks, setBacklinks] = useState<Backlink[]>([]);
+	const [spacePages, setSpacePages] = useState<
+		Array<{ id: string; title: string }>
+	>([]);
 	const [loading, setLoading] = useState(true);
 	const [error, setError] = useState<string | null>(null);
 
@@ -65,6 +78,27 @@ export function PageClient({ id }: { id: string }) {
 				}
 				const data = await res.json();
 				setPage(data);
+
+				// Fetch backlinks
+				const backlinksRes = await fetch(`/api/pages/${id}/backlinks`);
+				if (backlinksRes.ok) {
+					const backlinksData = await backlinksRes.json();
+					setBacklinks(backlinksData);
+				}
+
+				// Fetch all pages in the space for wiki link resolution
+				const spacePagesRes = await fetch(
+					`/api/pages?spaceId=${data.space.id}&limit=100`,
+				);
+				if (spacePagesRes.ok) {
+					const spacePagesData = await spacePagesRes.json();
+					setSpacePages(
+						spacePagesData.pages?.map((p: PageData) => ({
+							id: p.id,
+							title: p.title,
+						})) || [],
+					);
+				}
 			} catch (err) {
 				setError(err instanceof Error ? err.message : "An error occurred");
 			} finally {
@@ -93,6 +127,17 @@ export function PageClient({ id }: { id: string }) {
 			console.error("Failed to toggle pin:", error);
 		}
 	};
+
+	// Function to resolve wiki link titles to page IDs
+	const getPageIdByTitle = useCallback(
+		(title: string): string | undefined => {
+			const found = spacePages.find(
+				(p) => p.title.toLowerCase() === title.toLowerCase(),
+			);
+			return found?.id;
+		},
+		[spacePages],
+	);
 
 	if (loading) {
 		return (
@@ -251,7 +296,12 @@ export function PageClient({ id }: { id: string }) {
 
 				<Separator />
 
-				<MarkdownPreview content={page.markdown || ""} />
+				<MarkdownPreview
+					content={page.markdown || ""}
+					getPageIdByTitle={getPageIdByTitle}
+				/>
+
+				<BacklinksSection backlinks={backlinks} />
 			</div>
 
 			<div className="w-full shrink-0 space-y-4 lg:w-72">

@@ -2,6 +2,7 @@ import React from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
 import remarkGfm from "remark-gfm";
+import { preprocessWikiLinks } from "@/lib/markdown-links";
 import { cn } from "@/lib/utils";
 
 // Import highlight.js styles for dark mode
@@ -10,9 +11,19 @@ import "highlight.js/styles/github-dark.css";
 interface MarkdownPreviewProps {
 	content: string;
 	className?: string;
+	getPageIdByTitle?: (title: string) => string | undefined;
 }
 
-export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
+export function MarkdownPreview({
+	content,
+	className,
+	getPageIdByTitle,
+}: MarkdownPreviewProps) {
+	// Pre-process wiki links to convert [[Title]] to [Title](/pages/id)
+	const processedContent = getPageIdByTitle
+		? preprocessWikiLinks(content, getPageIdByTitle)
+		: content;
+
 	return (
 		<div
 			className={cn(
@@ -36,14 +47,19 @@ export function MarkdownPreview({ content, className }: MarkdownPreviewProps) {
 				remarkPlugins={[remarkGfm]}
 				rehypePlugins={[rehypeHighlight]}
 				components={{
-					// Custom renderers can be added here if needed
 					// eslint-disable-next-line @typescript-eslint/no-unused-vars
 					a: ({ node, ...props }) => (
-						<a target="_blank" rel="noopener noreferrer" {...props} />
+						<a
+							target={props.href?.startsWith("/") ? undefined : "_blank"}
+							rel={
+								props.href?.startsWith("/") ? undefined : "noopener noreferrer"
+							}
+							{...props}
+						/>
 					),
 				}}
 			>
-				{content}
+				{processedContent}
 			</ReactMarkdown>
 		</div>
 	);
