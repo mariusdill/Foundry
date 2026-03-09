@@ -1,8 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-	output: "standalone",
-	transpilePackages: ["@foundry/ui", "@foundry/shared", "@foundry/database"],
+	...(process.env.NODE_ENV === "production"
+		? { output: "standalone" as const }
+		: {}),
+	transpilePackages: ["@foundry/ui", "@foundry/shared"],
+	serverExternalPackages: ["@prisma/client", ".prisma/client", "prisma"],
 };
 
 export default nextConfig;

@@ -27,31 +27,31 @@ export default async function LoginPage({ searchParams }: LoginPageProps) {
 					<CardContent className="space-y-6 p-6 lg:p-8">
 						<div className="space-y-2">
 							<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
-								Knowledge operations / secure access
+								Foundry / secure access
 							</p>
 							<h1 className="max-w-2xl text-[28px] font-medium tracking-tight text-foreground lg:text-[34px]">
-								Calm, traceable access for a workspace built around human
-								review.
+								Enter a workspace built for steady review, durable pages, and
+								clear ownership.
 							</h1>
 							<p className="max-w-xl text-[14px] leading-6 text-secondary">
-								Foundry keeps stable knowledge human-owned, drafts
-								agent-friendly, and every mutation attributable.
+								Foundry keeps work close to home: drafts stay easy to review,
+								stable pages stay durable, and every change stays traceable.
 							</p>
 						</div>
 
 						<div className="grid gap-3 md:grid-cols-3">
 							{[
 								[
-									"Scoped sessions",
-									"JWT-backed sessions preserve role context while staying edge-friendly.",
+									"Workspace entry",
+									"Open Foundry with the same workspace context, review state, and role-aware access each time.",
 								],
 								[
-									"Draft safety",
-									"Agents default to draft-only writes and humans promote stable content.",
+									"Review by default",
+									"Drafts stay easy to inspect before they move into durable, stable pages.",
 								],
 								[
-									"Audit posture",
-									"Auth, token use, and mutations remain attributable end to end.",
+									"Traceable changes",
+									"Access, edits, and promotions remain attributable from the first draft to the final page.",
 								],
 							].map(([title, detail]) => (
 								<div

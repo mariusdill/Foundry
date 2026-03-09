@@ -1,5 +1,5 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { prisma } from "@foundry/database/src/client";
+import { prisma } from "@foundry/database";
 import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import NextAuth, { type Session } from "next-auth";

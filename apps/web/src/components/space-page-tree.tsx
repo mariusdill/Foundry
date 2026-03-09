@@ -7,7 +7,7 @@ import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 
-interface PageTreeProps {
+interface SpacePageTreeProps {
 	pages: Page[];
 }
 
@@ -18,7 +18,7 @@ type TreeNode = {
 	children: Record<string, TreeNode>;
 };
 
-export function PageTree({ pages }: PageTreeProps) {
+export function SpacePageTree({ pages }: SpacePageTreeProps) {
 	const pathname = usePathname();
 
 	const tree = useMemo(() => {
@@ -73,21 +73,22 @@ export function PageTree({ pages }: PageTreeProps) {
 	);
 }
 
-interface TreeNodeItemProps {
+function TreeNodeItem({
+	node,
+	level,
+	currentPathname,
+}: {
 	node: TreeNode;
 	level: number;
 	currentPathname: string;
-}
-
-function TreeNodeItem({ node, level, currentPathname }: TreeNodeItemProps) {
+}) {
 	const [isExpanded, setIsExpanded] = useState(true);
 	const hasChildren = Object.keys(node.children).length > 0;
 	const isPage = !!node.page;
-
 	const href = isPage ? `/pages/${node.page?.id}` : "#";
 	const isActive = currentPathname === href;
-	const itemClassName = cn(
-		"group flex w-full items-center gap-1.5 rounded-md px-2 py-1.5 text-sm transition-colors",
+	const rowClassName = cn(
+		"group flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm transition-colors",
 		isActive
 			? "bg-accent text-accent-foreground shadow-[var(--shadow-xs)]"
 			: "text-muted-foreground hover:bg-accent/50 hover:text-foreground",
@@ -96,35 +97,42 @@ function TreeNodeItem({ node, level, currentPathname }: TreeNodeItemProps) {
 	return (
 		<div>
 			{isPage ? (
-				<Link
-					href={href}
-					className={itemClassName}
+				<div
+					className={rowClassName}
 					style={{ paddingLeft: `${level * 12 + 8}px` }}
 				>
-					<span className="flex h-4 w-4 shrink-0 items-center justify-center">
+					<div className="flex h-4 w-4 shrink-0 items-center justify-center">
 						{hasChildren ? (
-							isExpanded ? (
-								<ChevronDown className="h-3.5 w-3.5" />
-							) : (
-								<ChevronRight className="h-3.5 w-3.5" />
-							)
+							<button
+								type="button"
+								className="flex h-4 w-4 items-center justify-center"
+								onClick={() => setIsExpanded((expanded) => !expanded)}
+							>
+								{isExpanded ? (
+									<ChevronDown className="h-3.5 w-3.5" />
+								) : (
+									<ChevronRight className="h-3.5 w-3.5" />
+								)}
+							</button>
 						) : (
 							<span className="w-3.5" />
 						)}
-					</span>
+					</div>
 					<FileText className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
-					<span className="flex-1 truncate">
+					<Link href={href} className="flex-1 truncate">
 						{node.page?.title || node.name}
-					</span>
-				</Link>
+					</Link>
+				</div>
 			) : (
 				<button
 					type="button"
-					className={itemClassName}
+					className={cn(rowClassName, "w-full cursor-pointer text-left")}
 					style={{ paddingLeft: `${level * 12 + 8}px` }}
-					onClick={() => setIsExpanded((expanded) => !expanded)}
+					onClick={() => {
+						if (hasChildren) setIsExpanded((expanded) => !expanded);
+					}}
 				>
-					<span className="flex h-4 w-4 shrink-0 items-center justify-center">
+					<div className="flex h-4 w-4 shrink-0 items-center justify-center">
 						{hasChildren ? (
 							isExpanded ? (
 								<ChevronDown className="h-3.5 w-3.5" />
@@ -134,9 +142,9 @@ function TreeNodeItem({ node, level, currentPathname }: TreeNodeItemProps) {
 						) : (
 							<span className="w-3.5" />
 						)}
-					</span>
+					</div>
 					<Folder className="h-4 w-4 shrink-0 text-muted-foreground transition-colors group-hover:text-foreground" />
-					<span className="flex-1 truncate text-left">{node.name}</span>
+					<span className="flex-1 truncate">{node.name}</span>
 				</button>
 			)}
 

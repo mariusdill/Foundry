@@ -252,7 +252,7 @@ export function DashboardPage({
 				<CardHeader className="gap-3 border-b border-[color:var(--border-subtle)] pb-4">
 					<CardTitle>Quick Overview</CardTitle>
 					<CardDescription>
-						{myEditedCount} pages you've edited · {draftCount} drafts in your
+						{myEditedCount} pages you edited · {draftCount} drafts in your
 						spaces · {pinnedCount} pinned pages
 					</CardDescription>
 				</CardHeader>
@@ -304,7 +304,7 @@ export function DashboardPage({
 					/>
 					<PageListCard
 						title="Your Recent Pages"
-						description="Continue working on pages you've recently edited without losing context."
+						description="Continue working on pages you recently edited without losing context."
 						items={recentPages}
 						emptyTitle="No recent pages yet"
 						emptyDescription="Pages you edit will appear here after the first changes land."
@@ -337,7 +337,7 @@ export function DashboardPage({
 								<div>
 									<CardTitle>Your Activity</CardTitle>
 									<CardDescription>
-										Recent changes in your spaces and pages you've worked on.
+										Recent changes in your spaces and pages you worked on.
 									</CardDescription>
 								</div>
 								<History className="mt-0.5 size-4 text-[color:var(--text-muted)]" />
@@ -391,7 +391,7 @@ export function DashboardPage({
 							) : (
 								<div className="space-y-3">
 									<p className="text-[13px] text-muted-foreground">
-										You don't have access to any spaces yet.
+										You do not have access to any spaces yet.
 									</p>
 									<Button asChild variant="ghost" size="sm">
 										<Link href="/spaces">Browse all spaces</Link>

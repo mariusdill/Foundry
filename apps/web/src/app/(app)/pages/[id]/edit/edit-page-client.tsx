@@ -1,11 +1,23 @@
 "use client";
 
-import { ArrowLeft, Edit2, Eye, Loader2, Save, X } from "lucide-react";
+import { formatDistanceToNow } from "date-fns";
+import {
+	ArrowLeft,
+	CheckCircle2,
+	Clock,
+	Edit2,
+	Eye,
+	Loader2,
+	Save,
+	User,
+	X,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { MarkdownPreview } from "@/components/markdown-preview";
 import { PageChrome } from "@/components/page-chrome";
 import { TiptapEditor } from "@/components/tiptap-editor";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,6 +28,11 @@ type PageData = {
 	id: string;
 	title: string;
 	tags: string[];
+	path: string;
+	status: "draft" | "stable" | "archived";
+	source: "human" | "agent";
+	updatedAt: string;
+	updatedBy?: { name: string | null; email: string | null };
 	space: { id: string; name: string; slug: string };
 	markdown: string;
 };
@@ -26,8 +43,10 @@ export function EditPageClient({ id }: { id: string }) {
 	const [loading, setLoading] = useState(true);
 	const [saving, setSaving] = useState(false);
 	const [error, setError] = useState<string | null>(null);
+	const [spacePages, setSpacePages] = useState<
+		Array<{ id: string; title: string }>
+	>([]);
 
-	// Form state
 	const [title, setTitle] = useState("");
 	const [markdown, setMarkdown] = useState("");
 	const [tagsInput, setTagsInput] = useState("");
@@ -41,11 +60,26 @@ export function EditPageClient({ id }: { id: string }) {
 				if (!res.ok) {
 					throw new Error("Failed to fetch page");
 				}
+
 				const data = await res.json();
 				setPage(data);
 				setTitle(data.title || "");
 				setMarkdown(data.markdown || "");
 				setTagsInput((data.tags || []).join(", "));
+
+				const spacePagesRes = await fetch(
+					`/api/pages?spaceId=${data.space.id}&limit=100`,
+				);
+
+				if (spacePagesRes.ok) {
+					const spacePagesData = await spacePagesRes.json();
+					setSpacePages(
+						spacePagesData.pages?.map((spacePage: PageData) => ({
+							id: spacePage.id,
+							title: spacePage.title,
+						})) || [],
+					);
+				}
 			} catch (err) {
 				setError(err instanceof Error ? err.message : "An error occurred");
 			} finally {
@@ -53,10 +87,9 @@ export function EditPageClient({ id }: { id: string }) {
 			}
 		}
 
-		fetchPage();
+		void fetchPage();
 	}, [id]);
 
-	// Track dirty state
 	useEffect(() => {
 		if (!page) return;
 
@@ -80,6 +113,18 @@ export function EditPageClient({ id }: { id: string }) {
 			setValidationError(null);
 		}
 	}, [title, markdown, tagsInput, page]);
+
+	const getPageIdByTitle = useCallback(
+		(searchTitle: string): string | undefined => {
+			const found = spacePages.find(
+				(spacePage) =>
+					spacePage.title.toLowerCase() === searchTitle.toLowerCase(),
+			);
+
+			return found?.id;
+		},
+		[spacePages],
+	);
 
 	const handleSave = async () => {
 		if (!title.trim()) {
@@ -161,14 +206,16 @@ export function EditPageClient({ id }: { id: string }) {
 	return (
 		<div className="mx-auto flex max-w-6xl flex-col gap-5">
 			<PageChrome
-				title="Edit page"
+				eyebrow="Editing"
+				title={page.title}
+				description="Update content, tags, and preview in the same workspace you read from."
 				breadcrumbs={[
 					{ label: "Workspace", href: "/" },
 					{ label: page.space.name, href: `/spaces/${page.space.id}` },
 					{ label: page.title, href: `/pages/${id}` },
-					{ label: "Edit" },
+					{ label: "Editing" },
 				]}
-				topBarTitle="Edit page"
+				topBarTitle={page.title}
 				actions={
 					<>
 						<Button variant="outline" onClick={handleCancel} disabled={saving}>
@@ -185,13 +232,57 @@ export function EditPageClient({ id }: { id: string }) {
 						</Button>
 					</>
 				}
-			/>
+			>
+				<div className="flex flex-wrap items-center gap-2">
+					<Badge variant={page.status}>{page.status}</Badge>
+					<Badge variant={page.source} className="capitalize">
+						{page.source}
+					</Badge>
+					{page.tags.map((tag) => (
+						<Badge key={tag} variant="outline">
+							#{tag}
+						</Badge>
+					))}
+				</div>
+			</PageChrome>
 
 			{validationError && (
 				<div className="rounded-md border border-destructive/20 bg-destructive/10 p-3 text-[13px] text-destructive">
 					{validationError}
 				</div>
 			)}
+
+			<div className="flex flex-wrap items-center gap-x-5 gap-y-2 rounded-[10px] border border-[color:var(--border-subtle)] bg-surface-2 px-4 py-3 text-[13px] text-muted-foreground">
+				<div className="flex items-center gap-1.5">
+					<Clock className="h-4 w-4" />
+					<span>
+						Updated{" "}
+						{formatDistanceToNow(new Date(page.updatedAt), { addSuffix: true })}
+					</span>
+				</div>
+
+				{page.updatedBy ? (
+					<div className="flex items-center gap-1.5">
+						<User className="h-4 w-4" />
+						<span>
+							By {page.updatedBy.name || page.updatedBy.email || "Unknown"}
+						</span>
+					</div>
+				) : null}
+
+				{page.status === "stable" ? (
+					<div className="flex items-center gap-1.5 text-emerald-500/80">
+						<CheckCircle2 className="h-4 w-4" />
+						<span>Verified</span>
+					</div>
+				) : null}
+
+				{isDirty ? (
+					<Badge variant="outline" className="ml-auto">
+						Unsaved changes
+					</Badge>
+				) : null}
+			</div>
 
 			<div className="space-y-5">
 				<div className="space-y-4">
@@ -254,13 +345,19 @@ export function EditPageClient({ id }: { id: string }) {
 
 						<TabsContent
 							value="preview"
-							className="m-0 min-h-[400px] border-0 bg-background p-6"
+							className="m-0 min-h-[400px] border-0 bg-background/60 p-6"
 						>
 							{markdown ? (
-								<MarkdownPreview content={markdown} />
+								<div className="rounded-[12px] border border-[color:var(--border-subtle)] bg-background/80 p-5">
+									<MarkdownPreview
+										content={markdown}
+										getPageIdByTitle={getPageIdByTitle}
+									/>
+								</div>
 							) : (
-								<div className="text-center text-muted-foreground py-12 italic">
-									Nothing to preview
+								<div className="rounded-[12px] border border-dashed border-[color:var(--border-strong)] bg-surface-2/40 py-12 text-center text-[13px] text-muted-foreground">
+									Start writing to preview this page exactly as it will read in
+									the workspace.
 								</div>
 							)}
 						</TabsContent>

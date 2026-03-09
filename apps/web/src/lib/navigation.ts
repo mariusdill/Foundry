@@ -1,13 +1,8 @@
 import {
-	ActivitySquare,
-	BookMarked,
 	FolderKanban,
-	History,
 	LayoutDashboard,
 	type LucideIcon,
 	Search,
-	Settings2,
-	ShieldEllipsis,
 	Sparkles,
 } from "lucide-react";
 
@@ -57,14 +52,14 @@ export const sidebarActionSurfaces = [
 	{
 		href: "/search",
 		label: "Search",
-		description: "Find pages across projects and runbooks.",
+		description: "Find pages, drafts, and context across the workspace.",
 		icon: Search,
 		shortcut: "Cmd K",
 	},
 	{
 		href: "/drafts",
-		label: "Drafts",
-		description: "Review changes waiting for a human decision.",
+		label: "Review",
+		description: "Decide what stays in draft and what becomes stable.",
 		icon: Sparkles,
 	},
 ] satisfies SidebarActionSurface[];
@@ -72,63 +67,24 @@ export const sidebarActionSurfaces = [
 export const commandNavigation = [
 	{ href: "/", label: "Home", icon: LayoutDashboard, shortcut: "G H" },
 	{ href: "/search", label: "Search", icon: Search, shortcut: "G S" },
-	{ href: "/drafts", label: "Drafts", icon: Sparkles, shortcut: "G R" },
+	{ href: "/drafts", label: "Review", icon: Sparkles, shortcut: "G R" },
 	{ href: "/spaces", label: "Spaces", icon: FolderKanban, shortcut: "G P" },
-];
-
-export const knowledgeNavigation = [
-	{
-		href: "/spaces",
-		label: "Runbooks",
-		icon: BookMarked,
-		hint: "Operational truth",
-	},
-	{
-		href: "/spaces",
-		label: "Projects",
-		icon: FolderKanban,
-		hint: "Execution notes",
-	},
-	{
-		href: "/audit",
-		label: "Audit log",
-		icon: History,
-		hint: "Every write is attributable",
-	},
-	{
-		href: "/settings/tokens",
-		label: "Token settings",
-		icon: ShieldEllipsis,
-		hint: "Scoped access",
-	},
-	{
-		href: "/settings/profile",
-		label: "Profile",
-		icon: Settings2,
-		hint: "Workspace defaults",
-	},
-	{
-		href: "/activity",
-		label: "Recent agent activity",
-		icon: ActivitySquare,
-		hint: "Draft-first writes",
-	},
 ];
 
 export const sidebarCollections = [
 	{
-		title: "Recents",
+		title: "Recent work",
 		items: [
-			{ label: "Incident response handbook", meta: "runbooks/operations" },
+			{ label: "Incident response handbook", meta: "runbooks/platform" },
 			{ label: "Launch review notes", meta: "projects/marketing" },
-			{ label: "API token hardening", meta: "projects/platform" },
+			{ label: "Search tuning checklist", meta: "runbooks/retrieval" },
 		],
 	},
 	{
-		title: "Pinned",
+		title: "Pinned pages",
 		items: [
-			{ label: "Search tuning checklist", meta: "runbooks/platform" },
-			{ label: "Draft promotion policy", meta: "runbooks/knowledge" },
+			{ label: "Draft promotion policy", meta: "runbooks/review" },
+			{ label: "Workspace home checklist", meta: "runbooks/foundry" },
 			{ label: "Quarterly roadmap", meta: "projects/product" },
 		],
 	},
@@ -160,8 +116,8 @@ export function getAppChromeState(pathname: string): AppChromeState {
 
 	if (segments[0] === "drafts") {
 		return {
-			breadcrumbs: [{ label: "Workspace", href: "/" }, { label: "Drafts" }],
-			title: "Drafts",
+			breadcrumbs: [{ label: "Workspace", href: "/" }, { label: "Review" }],
+			title: "Review",
 		};
 	}
 

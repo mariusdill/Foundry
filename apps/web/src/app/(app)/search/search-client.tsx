@@ -168,17 +168,17 @@ export function SearchClient() {
 		<PageChrome
 			className="space-y-4"
 			eyebrow="Workspace / retrieval"
-			title="Retrieve pages and drafts across spaces"
-			description="Search page titles, then narrow by space, status, source, or recent updates."
+			title="Search across pages, drafts, and spaces"
+			description="Start with a title or phrase, then narrow the results by space, status, source, or recent updates."
 		>
 			<Card className="overflow-hidden bg-card/95">
 				<CardHeader className="gap-4 border-b border-[color:var(--border-subtle)] pb-4">
 					<div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
 						<div>
-							<CardTitle>Search page titles</CardTitle>
+							<CardTitle>Find pages and drafts</CardTitle>
 							<CardDescription>
-								Use keywords, filters, or the local `Cmd/Ctrl+K` shortcut to
-								retrieve pages and drafts without changing routes.
+								Use keywords, filters, or `Cmd/Ctrl+K` to move through the
+								workspace without losing context.
 							</CardDescription>
 						</div>
 						<p className="text-[12px] text-muted-foreground">
@@ -186,7 +186,7 @@ export function SearchClient() {
 								? "Searching..."
 								: hasSearched
 									? `${results.length} result${results.length === 1 ? "" : "s"}`
-									: "Refine by space, status, source, or recency."}
+									: "Filter by space, status, source, or recency."}
 						</p>
 					</div>
 
@@ -197,7 +197,7 @@ export function SearchClient() {
 								ref={inputRef}
 								value={query}
 								onChange={(event) => setQuery(event.target.value)}
-								placeholder="Search page titles..."
+								placeholder="Search pages and drafts..."
 								className="h-11 pl-9 pr-24 text-[14px]"
 							/>
 							<div className="absolute right-3 top-1/2 flex -translate-y-1/2 items-center gap-2">
@@ -290,7 +290,7 @@ export function SearchClient() {
 								No results found
 							</p>
 							<p className="mt-1 max-w-sm text-[13px] text-muted-foreground">
-								Try a different title or adjust the filters.
+								Try a different term or clear one of the filters.
 							</p>
 						</CardContent>
 					</Card>

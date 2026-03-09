@@ -1,11 +1,11 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 
 const TEST_CREDENTIALS = {
 	email: "admin@foundry.local",
 	password: "admin123",
 };
 
-async function login(page) {
+async function login(page: Page) {
 	await page.goto("/login");
 	await page.fill('input[type="email"]', TEST_CREDENTIALS.email);
 	await page.fill('input[type="password"]', TEST_CREDENTIALS.password);

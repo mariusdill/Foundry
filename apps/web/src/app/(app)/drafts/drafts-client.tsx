@@ -124,10 +124,10 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 				<CardHeader className="gap-4 border-b border-[color:var(--border-subtle)] pb-4">
 					<div className="flex flex-col gap-2 lg:flex-row lg:items-end lg:justify-between">
 						<div>
-							<CardTitle>Review lane</CardTitle>
+							<CardTitle>Review queue</CardTitle>
 							<CardDescription>
-								Search by title or path, then narrow the review queue by source
-								or space.
+								Search by title or path, then narrow the queue by source or
+								space.
 							</CardDescription>
 						</div>
 						<p className="text-[12px] text-muted-foreground">
@@ -184,39 +184,39 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 				<Card className="bg-card/95">
 					<CardContent className="space-y-1 pt-5">
 						<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
-							Awaiting review
+							In review
 						</p>
 						<p className="text-[28px] font-medium tracking-tight text-foreground">
 							{drafts.length}
 						</p>
 						<p className="text-[12px] text-muted-foreground">
-							Current draft pages still need a human decision.
+							Draft pages still waiting on a decision.
 						</p>
 					</CardContent>
 				</Card>
 				<Card className="bg-card/95">
 					<CardContent className="space-y-1 pt-5">
 						<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
-							Agent drafts
+							Agent-authored
 						</p>
 						<p className="text-[28px] font-medium tracking-tight text-foreground">
 							{agentDraftCount}
 						</p>
 						<p className="text-[12px] text-muted-foreground">
-							Review draft pages created or updated by an agent.
+							Draft pages created or updated by an agent.
 						</p>
 					</CardContent>
 				</Card>
 				<Card className="bg-card/95">
 					<CardContent className="space-y-1 pt-5">
 						<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
-							Human drafts
+							Human-authored
 						</p>
 						<p className="text-[28px] font-medium tracking-tight text-foreground">
 							{humanDraftCount}
 						</p>
 						<p className="text-[12px] text-muted-foreground">
-							Keep in-progress page work visible before promotion.
+							In-progress work kept visible before promotion.
 						</p>
 					</CardContent>
 				</Card>
@@ -229,16 +229,16 @@ export function DraftsClient({ initialDrafts }: DraftsClientProps) {
 							<FileText className="size-4" />
 						</div>
 						<p className="text-[15px] font-medium text-foreground">
-							No drafts awaiting review
+							Review queue is clear
 						</p>
 						<p className="mt-1 max-w-sm text-[13px] text-muted-foreground">
 							{initialDrafts.length === 0
-								? "There are currently no draft pages in the workspace."
+								? "There are no draft pages in this workspace right now."
 								: "No drafts match your current filters."}
 						</p>
 						{initialDrafts.length === 0 ? (
 							<Button asChild className="mt-5">
-								<Link href="/spaces">Browse spaces</Link>
+								<Link href="/spaces">Open spaces</Link>
 							</Button>
 						) : null}
 					</CardContent>

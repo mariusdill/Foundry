@@ -37,8 +37,7 @@ export function LoginForm({ callbackUrl, error }: LoginFormProps) {
 	const [isPending, startTransition] = useTransition();
 
 	const helperMessage = useMemo(
-		() =>
-			formError ?? "Use your local Foundry credentials to enter the workspace.",
+		() => formError ?? "Sign in to return to your workspace home.",
 		[formError],
 	);
 
@@ -46,7 +45,7 @@ export function LoginForm({ callbackUrl, error }: LoginFormProps) {
 		<Card>
 			<CardHeader className="pb-4">
 				<p className="text-[11px] uppercase tracking-[0.14em] text-[color:var(--text-muted)]">
-					Secure access
+					Workspace sign in
 				</p>
 				<CardTitle className="mt-1 text-[20px]">Sign in to Foundry</CardTitle>
 				<CardDescription className="mt-1">{helperMessage}</CardDescription>
@@ -128,7 +127,7 @@ export function LoginForm({ callbackUrl, error }: LoginFormProps) {
 					) : null}
 
 					<Button className="w-full" disabled={isPending} type="submit">
-						{isPending ? "Signing in..." : "Enter workspace"}
+						{isPending ? "Signing in..." : "Open workspace"}
 						<ArrowRight className="size-4" />
 					</Button>
 				</form>
@@ -136,9 +135,9 @@ export function LoginForm({ callbackUrl, error }: LoginFormProps) {
 
 			<CardFooter className="text-[12px] text-muted-foreground">
 				<div className="flex w-full items-center justify-between gap-4">
-					<span>Seed user: admin@foundry.local</span>
+					<span>Local seed: admin@foundry.local</span>
 					<span className="font-mono uppercase tracking-[0.14em]">
-						JWT session
+						Dev access
 					</span>
 				</div>
 			</CardFooter>

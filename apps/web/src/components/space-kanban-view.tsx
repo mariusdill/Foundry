@@ -2,13 +2,13 @@
 
 import type { Page, User } from "@foundry/database";
 import { formatDistanceToNow } from "date-fns";
-import { Bot, Clock, FileText, User as UserIcon } from "lucide-react";
+import { FileText } from "lucide-react";
 import Link from "next/link";
 import { Badge } from "@/components/ui/badge";
 
 type PageWithUser = Page & { updatedBy: User | null };
 
-interface KanbanViewProps {
+interface SpaceKanbanViewProps {
 	pages: PageWithUser[];
 }
 
@@ -21,71 +21,48 @@ const COLUMNS = [
 function KanbanCard({ page }: { page: PageWithUser }) {
 	return (
 		<Link href={`/pages/${page.id}`}>
-			<div className="group rounded-[12px] border border-[color:var(--border-subtle)] bg-card/95 p-4 shadow-[var(--shadow-xs)] transition-all hover:border-[color:var(--border-strong)] hover:bg-surface-2/80 hover:shadow-[var(--shadow-sm)]">
-				<div className="flex items-start gap-2.5">
+			<div className="group rounded-lg border border-[color:var(--border-subtle)] bg-card/95 p-3 shadow-[var(--shadow-xs)] transition-all hover:border-[color:var(--border-strong)] hover:shadow-[var(--shadow-sm)]">
+				<div className="flex items-start gap-2">
 					<FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
 					<div className="min-w-0 flex-1">
-						<p className="truncate text-[14px] font-medium text-foreground">
+						<p className="truncate text-[13px] font-medium text-foreground">
 							{page.title}
 						</p>
-						<p className="mt-1 truncate text-[12px] text-muted-foreground">
+						<p className="truncate text-[11px] text-muted-foreground">
 							{page.path}
 						</p>
 					</div>
 				</div>
-
-				<div className="mt-3 flex flex-wrap items-center gap-2">
-					<Badge variant={page.status}>{page.status}</Badge>
+				<div className="mt-3 flex items-center justify-between">
 					<Badge variant={page.source}>{page.source}</Badge>
-					{page.tags.slice(0, 2).map((tag) => (
-						<span
-							key={tag}
-							className="rounded-sm bg-surface-2 px-1.5 py-0.5 text-[11px] text-muted-foreground"
-						>
-							#{tag}
-						</span>
-					))}
+					<span className="text-[11px] text-[color:var(--text-muted)]">
+						{formatDistanceToNow(new Date(page.updatedAt), { addSuffix: true })}
+					</span>
 				</div>
-
-				<div className="mt-4 space-y-2 border-t border-[color:var(--border-subtle)] pt-3 text-[12px] text-muted-foreground">
-					<div className="flex items-center gap-1.5">
-						<Clock className="size-3.5" />
-						<span>
-							{formatDistanceToNow(new Date(page.updatedAt), {
-								addSuffix: true,
-							})}
-						</span>
+				{page.updatedBy ? (
+					<div className="mt-2 border-t border-[color:var(--border-subtle)] pt-2">
+						<p className="truncate text-[11px] text-muted-foreground">
+							by {page.updatedBy.name ?? page.updatedBy.email}
+						</p>
 					</div>
-					{page.updatedBy ? (
-						<div className="flex items-center gap-1.5">
-							{page.source === "agent" ? (
-								<Bot className="size-3.5" />
-							) : (
-								<UserIcon className="size-3.5" />
-							)}
-							<span className="truncate">
-								by {page.updatedBy.name ?? page.updatedBy.email}
-							</span>
-						</div>
-					) : null}
-				</div>
+				) : null}
 			</div>
 		</Link>
 	);
 }
 
-export function KanbanView({ pages }: KanbanViewProps) {
+export function SpaceKanbanView({ pages }: SpaceKanbanViewProps) {
 	const columns = COLUMNS.map((column) => ({
 		...column,
 		pages: pages.filter((page) => page.status === column.id),
 	}));
 
 	return (
-		<div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
+		<div className="grid grid-cols-1 gap-4 md:grid-cols-3">
 			{columns.map((column) => (
 				<div
 					key={column.id}
-					className="flex flex-col overflow-hidden rounded-[14px] border border-[color:var(--border-subtle)] bg-card/95"
+					className="flex flex-col rounded-[14px] border border-[color:var(--border-subtle)] bg-surface-2/50"
 				>
 					<div className="border-b border-[color:var(--border-subtle)] px-4 py-3">
 						<div className="flex items-center justify-between">
@@ -100,13 +77,13 @@ export function KanbanView({ pages }: KanbanViewProps) {
 							{column.description}
 						</p>
 					</div>
-					<div className="flex-1 space-y-3 bg-surface-2/35 p-3">
+					<div className="flex-1 space-y-2 p-3">
 						{column.pages.length > 0 ? (
 							column.pages.map((page) => (
 								<KanbanCard key={page.id} page={page} />
 							))
 						) : (
-							<div className="flex h-28 items-center justify-center rounded-lg border border-dashed border-[color:var(--border-subtle)] bg-card/60">
+							<div className="flex h-24 items-center justify-center rounded-lg border border-dashed border-[color:var(--border-subtle)]">
 								<p className="text-[12px] text-muted-foreground">
 									No {column.label.toLowerCase()} pages
 								</p>

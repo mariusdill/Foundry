@@ -28,7 +28,7 @@ export function PageChrome({
 	topBarTitle,
 }: PageChromeProps) {
 	return (
-		<div className={cn("space-y-5", className)}>
+		<div className={cn("space-y-4", className)}>
 			{breadcrumbs || topBarTitle ? (
 				<RouteChromeRegistration
 					breadcrumbs={breadcrumbs}
@@ -37,7 +37,7 @@ export function PageChrome({
 			) : null}
 			<header
 				className={cn(
-					"flex flex-col gap-4 border-b border-[color:var(--border-subtle)] pb-5 sm:flex-row sm:items-end sm:justify-between",
+					"flex flex-col gap-4 border-b border-[color:var(--border-subtle)] pb-4 sm:flex-row sm:items-end sm:justify-between",
 					headerClassName,
 				)}
 			>
@@ -56,7 +56,7 @@ export function PageChrome({
 						{title}
 					</h1>
 					{description ? (
-						<p className="mt-1 max-w-3xl text-[13px] leading-5 text-muted-foreground">
+						<p className="mt-1.5 max-w-2xl text-[13px] leading-5 text-muted-foreground">
 							{description}
 						</p>
 					) : null}

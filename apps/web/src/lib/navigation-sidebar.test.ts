@@ -19,8 +19,8 @@ describe("sidebar navigation data", () => {
 	it("provides local-data-backed action and collection sections", () => {
 		expect(sidebarActionSurfaces.length).toBeGreaterThan(0);
 		expect(sidebarCollections.map((section) => section.title)).toEqual([
-			"Recents",
-			"Pinned",
+			"Recent work",
+			"Pinned pages",
 		]);
 		expect(
 			sidebarCollections.every((section) => section.items.length > 0),

@@ -87,14 +87,14 @@ export function AppSidebar({
 										Foundry
 									</span>
 									<span className="text-[11px] text-sidebar-foreground/60">
-										Authenticated workspace
+										Workspace home
 									</span>
 								</div>
 								<Badge
 									variant="agent"
 									className="rounded-full border border-sidebar-border bg-sidebar group-data-[collapsible=icon]:hidden"
 								>
-									Live
+									Review-first
 								</Badge>
 							</Link>
 						</SidebarMenuButton>

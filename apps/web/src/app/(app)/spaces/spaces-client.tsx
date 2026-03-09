@@ -68,8 +68,8 @@ export function SpacesClient({ initialSpaces }: SpacesClientProps) {
 		<PageChrome
 			className="space-y-5"
 			eyebrow="Workspace / spaces"
-			title="Durable work areas for runbooks and projects"
-			description={`${spaces.length} spaces holding pages, drafts, and recent work across runbooks and projects.`}
+			title="Spaces for runbooks, projects, and shared work"
+			description={`${spaces.length} spaces holding pages, drafts, and recent work across your workspace.`}
 			actions={
 				<>
 					<div className="flex items-center rounded-md border border-[color:var(--border-subtle)] bg-surface-2 p-1 shadow-[var(--shadow-xs)]">
@@ -103,11 +103,11 @@ export function SpacesClient({ initialSpaces }: SpacesClientProps) {
 				<CardContent className="flex flex-col gap-3 p-4 sm:flex-row sm:items-start sm:justify-between">
 					<div className="space-y-1">
 						<p className="text-[14px] font-medium text-foreground">
-							Spaces keep runbooks and project pages in one place
+							Keep related work close to home
 						</p>
 						<p className="text-[13px] text-muted-foreground">
-							Each space keeps related pages and drafts together without
-							changing the grid, list, or create-space flow.
+							Each space brings pages, drafts, and review history together in
+							one durable surface.
 						</p>
 					</div>
 					<div className="flex flex-wrap gap-2 text-[12px] text-muted-foreground">
@@ -130,7 +130,8 @@ export function SpacesClient({ initialSpaces }: SpacesClientProps) {
 							No spaces yet
 						</p>
 						<p className="mt-1 max-w-sm text-[13px] text-muted-foreground">
-							Create your first space to hold runbooks or project pages.
+							Create your first space for runbooks, projects, and shared page
+							work.
 						</p>
 						<Button
 							className="mt-5"
@@ -170,14 +171,14 @@ export function SpacesClient({ initialSpaces }: SpacesClientProps) {
 											<div className="space-y-1">
 												<CardTitle className="truncate">{space.name}</CardTitle>
 												<CardDescription className="line-clamp-2 min-h-10">
-													{space.description || "No description provided yet."}
+													{space.description || "No description yet."}
 												</CardDescription>
 											</div>
 										</CardHeader>
 										<CardContent className="flex items-center justify-between gap-3 border-t border-[color:var(--border-subtle)] pt-3 text-[12px] text-muted-foreground">
 											<span>{getPageLabel(space._count?.pages || 0)}</span>
 											<span className="text-[color:var(--text-muted)]">
-												Open space
+												View space
 											</span>
 										</CardContent>
 									</>
@@ -195,14 +196,14 @@ export function SpacesClient({ initialSpaces }: SpacesClientProps) {
 													<Badge variant="secondary">{space.kind}</Badge>
 												</div>
 												<CardDescription className="mt-1 truncate">
-													{space.description || "No description provided yet."}
+													{space.description || "No description yet."}
 												</CardDescription>
 											</div>
 										</div>
 										<div className="shrink-0 text-right text-[12px] text-muted-foreground">
 											<p>{getPageLabel(space._count?.pages || 0)}</p>
 											<p className="mt-1 text-[11px] text-[color:var(--text-muted)]">
-												Open space
+												View space
 											</p>
 										</div>
 									</CardContent>
